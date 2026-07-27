@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Store, Plus, Trash2, Edit3, Check, X, Save, Palette, Layers, 
-  ShoppingBag, Ticket, TrendingUp, Sliders, Settings, Users, LogOut,
-  Info, Eye, Grid, List, CheckCircle, Package, Truck, AlertCircle, Star,
-  Wrench, Smartphone, CreditCard, Sparkles, GripVertical, ChevronUp, ChevronDown,
-  MessageCircle
-} from 'lucide-react';
+import { Store, Plus, Trash2, CreditCard as Edit3, Check, X, Save, Palette, Layers, ShoppingBag, Ticket, TrendingUp, FileSliders as Sliders, Settings, Users, LogOut, Info, Eye, Grid2x2 as Grid, List, CircleCheck as CheckCircle, Package, Truck, CircleAlert as AlertCircle, Star, Wrench, Smartphone, CreditCard, Sparkles, GripVertical, ChevronUp, ChevronDown, MessageCircle } from 'lucide-react';
 import { Store as StoreType, Product, Order, Coupon, StoreBanner, User as UserType, PaymentGateway, CustomCheckoutField, PaymentGatewayType, CustomFieldType } from '../types';
 import { fbSync, saveLocal } from '../lib/firebaseSync';
 import { detectBusinessType, getBusinessTemplate, BUSINESS_TEMPLATES } from '../data/businessTemplates';
@@ -1408,7 +1402,7 @@ export default function MerchantDashboard({ storeId, onLogout, onViewStore }: Me
                   <div className="bg-zinc-950/40 p-4 rounded-xl border border-zinc-800 space-y-4">
                     <span className="text-xs font-bold text-zinc-300 flex items-center gap-1.5">
                       <Sparkles className="text-cyan-400 w-4 h-4 animate-pulse" />
-                      <span>✨ التخصيص المباشر للمتجر (خطوط، بطاقات، وظلال)</span>
+                      <span>✨ التخصيص المباشر للمتجر (خطوء بطاقات، وظلال)</span>
                     </span>
                     <p className="text-[10px] text-zinc-500 leading-relaxed">
                       غير مظهر متجرك فورياً ليناسب هويتك التجارية. هذه التغييرات تنعكس على الخطوط المستخدمة، انحناءات زوايا الأزرار والبطاقات، وتأثيرات الظلال.
@@ -3700,7 +3694,7 @@ export default function MerchantDashboard({ storeId, onLogout, onViewStore }: Me
           <div className="space-y-6 text-right font-sans" dir="rtl">
             <div>
               <h2 className="text-lg font-bold text-white">إعدادات الهوية والواجهة الكاملة</h2>
-              <p className="text-xs text-zinc-400 mt-1">تخصيص كامل لألوان المتجر، الخطوط، بيانات الاتصال، معلومات الشحن والعروض.</p>
+              <p className="text-xs text-zinc-400 mt-1">تخصيص كامل لألوان المتجر، الخطوء بيانات الاتصال، معلومات الشحن والعروض.</p>
             </div>
 
             <form onSubmit={handleSaveBranding} className="bg-zinc-900/60 border border-zinc-800 p-6 rounded-2xl space-y-5">

@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useTranslation } from 'react-i18next';
-import { 
-  ArrowRight, Star, Heart, Share2, Phone, Mail, MapPin, Sparkles, 
-  ShoppingBag, Check, Grid, List, Sparkle, MessageSquarePlus, MessageSquare, Info,
-  CreditCard, CheckCircle2, ChevronLeft, ChevronRight, X,
-  Search, User, Trash2, Plus, Minus, Wrench, Clock, Copy, Smartphone
-} from 'lucide-react';
+import { ArrowRight, Star, Heart, Share2, Phone, Mail, MapPin, Sparkles, ShoppingBag, Check, Grid2x2 as Grid, List, Sparkle, MessageSquarePlus, MessageSquare, Info, CreditCard, CircleCheck as CheckCircle2, ChevronLeft, ChevronRight, X, Search, User, Trash2, Plus, Minus, Wrench, Clock, Copy, Smartphone } from 'lucide-react';
 import { Store, Product, Review, User as UserType, StoreTemplateConfig, PaymentGateway, CustomCheckoutField, CustomFieldType } from '../types';
 import { compressAndResizeImage } from './ImagePicker';
 import { fbSync, saveLocal } from '../lib/firebaseSync';
@@ -189,7 +184,7 @@ export default function StoreView({
         // Load template config from admin
         const templates = JSON.parse(localStorage.getItem('mix_store_templates') || '[]');
         const cat = (updatedStore?.category || initialStore.category || '').toLowerCase();
-        const isRepair = cat.includes('طµظٹط§ظ†ط©') || cat.includes('ظ…ظˆط¨ط§ظٹظ„') || cat.includes('ظ‡ظˆط§طھظپ') || cat.includes('ط¬ظˆط§ظ„');
+        const isRepair = cat.includes('صيانة') || cat.includes('موبايل') || cat.includes('هواتف') || cat.includes('جوال');
         const tpl = templates.find((t: any) => isRepair && t.id === 'tpl-phone-repair') || templates[0] || null;
         if (tpl) setTemplateConfig(tpl);
       } catch {}
@@ -790,7 +785,7 @@ export default function StoreView({
             {/* Active Store Indicator */}
             <span className="text-[10px] uppercase tracking-wider font-semibold py-1 px-2.5 rounded-full border bg-zinc-900 text-zinc-400 border-zinc-800 flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full animate-ping" style={{ backgroundColor: store.themeColor.primary }} />
-              ظ…طھط¬ط± ظ…ط³طھظ‚ظ„ ظپظٹ MIX
+              متجر مستقل في MIX
             </span>
           </div>
 
@@ -869,7 +864,7 @@ export default function StoreView({
                 </span>
                 <span className="bg-zinc-800/80 text-zinc-300 border border-zinc-700/50 text-[9px] px-2 py-0.5 rounded-full flex items-center gap-1 font-bold">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  {i18n.language === 'en' ? 'Verified Partner' : (templateConfig?.branding?.trustedBadge || 'ط´ط±ظٹظƒ ظ…ط¹طھظ…ط¯')}
+                  {i18n.language === 'en' ? 'Verified Partner' : (templateConfig?.branding?.trustedBadge || 'شريك معتمد')}
                 </span>
               </div>
               
@@ -880,32 +875,32 @@ export default function StoreView({
               <div className="flex items-center gap-3 text-[10px] sm:text-xs text-zinc-400 mt-2 flex-wrap">
                 <span className="flex items-center gap-1 text-amber-400 font-bold">
                   <Star size={13} fill="currentColor" />
-                  {store.rating} <span className="text-[10px] text-zinc-400">({store.reviewsCount} {i18n.language === 'en' ? 'reviews' : 'طھظ‚ظٹظٹظ…'})</span>
+                  {store.rating} <span className="text-[10px] text-zinc-400">({store.reviewsCount} {i18n.language === 'en' ? 'reviews' : 'تقييم'})</span>
                 </span>
                 <span className="text-zinc-700">â€¢</span>
                 <span className="flex items-center gap-1 text-zinc-300">
                   <MapPin size={11} className="text-zinc-500" />
-                  {store.district ? `${store.district}طŒ ` : ''}{store.city}طŒ {store.country}
+                  {store.district ? `${store.district}، ` : ''}{store.city}، {store.country}
                 </span>
                 {store.storePhone && (
                   <>
                     <span className="text-zinc-700">â€¢</span>
                     <a href={`tel:${store.storePhone}`} className="flex items-center gap-1 text-emerald-400 hover:text-emerald-300" dir="ltr">
-                      ًں“‍ {store.storePhone}
+                      📞 {store.storePhone}
                     </a>
                   </>
                 )}
                 <span className="text-zinc-700">â€¢</span>
-                <span className="text-zinc-300">{storeProducts.length} {i18n.language === 'en' ? 'products' : 'ظ…ظ†طھط¬'}</span>
+                <span className="text-zinc-300">{storeProducts.length} {i18n.language === 'en' ? 'products' : 'منتج'}</span>
                 <span className="text-zinc-700">â€¢</span>
                 <button
                   onClick={() => {
                     const url = `${window.location.origin}${window.location.pathname}#/store/${store.slug || store.id}`;
-                    navigator.clipboard.writeText(url).then(() => alert('طھظ… ظ†ط³ط® ط±ط§ط¨ط· ط§ظ„ظ…طھط¬ط±!'));
+                    navigator.clipboard.writeText(url).then(() => alert('تم نسخ رابط المتجر!'));
                   }}
                   className="flex items-center gap-1 text-blue-400 hover:text-blue-300 cursor-pointer transition-colors"
                 >
-                  ًں”— ظ…ط´ط§ط±ظƒط©
+                  🔗 مشاركة
                 </button>
               </div>
             </div>
@@ -918,11 +913,11 @@ export default function StoreView({
       <div className="bg-zinc-950/90 sticky top-[49px] z-30 border-b border-zinc-800 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 overflow-x-auto flex justify-center gap-1 sm:gap-2 py-2" style={{ scrollbarWidth: 'none' }}>
           {[
-            { id: 'home', label: 'ط§ظ„ط±ط¦ظٹط³ظٹط©' },
-            { id: 'products', label: 'ط§ظ„ظ…ظ†طھط¬ط§طھ' },
-            { id: 'offers', label: 'ط§ظ„ط¹ط±ظˆط¶ ط§ظ„ظ‚ظˆظٹط©' },
-            { id: 'reviews', label: 'ط§ظ„طھظ‚ظٹظٹظ…ط§طھ' },
-            { id: 'about', label: 'ظ…ط¹ظ„ظˆظ…ط§طھ ط§ظ„طھظˆط§طµظ„' }
+            { id: 'home', label: 'الرئيسية' },
+            { id: 'products', label: 'المنتجات' },
+            { id: 'offers', label: 'العروض القوية' },
+            { id: 'reviews', label: 'التقييمات' },
+            { id: 'about', label: 'معلومات التواصل' }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -961,7 +956,7 @@ export default function StoreView({
                 <div className="relative">
                   <input 
                     type="text" 
-                    placeholder={i18n.language === 'en' ? "Search for products, categories, or details in this store..." : "ط§ظ„ط¨ط­ط« ط§ظ„ط³ط±ظٹط¹ ظپظٹ ظ…ظ†طھط¬ط§طھ ظˆط£ظ‚ط³ط§ظ… ظ‡ط°ط§ ط§ظ„ظ…طھط¬ط±..."}
+                    placeholder={i18n.language === 'en' ? "Search for products, categories, or details in this store..." : "البحث السريع في منتجات وأقسام هذا المتجر..."}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full bg-zinc-950/90 border border-zinc-700/40 focus:border-amber-500 rounded-2xl py-2.5 sm:py-3 pr-11 pl-4 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-amber-500/50 transition-all text-right font-sans shadow-inner"
@@ -983,10 +978,10 @@ export default function StoreView({
                 <div className="flex items-center justify-between border-b border-zinc-800/60 pb-2">
                   <span className="text-[10px] sm:text-xs font-black text-amber-400 flex items-center gap-1.5 uppercase tracking-wider">
                     <Sparkles size={13} className="animate-pulse text-amber-500" />
-                    <span>{i18n.language === 'en' ? "Browse Store Sections" : "ط£ظ‚ط³ط§ظ… ط§ظ„ظ…طھط¬ط± ط§ظ„ظ…طھط§ط­ط©"}</span>
+                    <span>{i18n.language === 'en' ? "Browse Store Sections" : "أقسام المتجر المتاحة"}</span>
                   </span>
                   <span className="text-[10px] text-zinc-500 font-medium">
-                    {i18n.language === 'en' ? `Showing ${filteredProducts.length} items` : `ظ…ط¹ط±ظˆط¶ ${filteredProducts.length} ظ…ظ†طھط¬`}
+                    {i18n.language === 'en' ? `Showing ${filteredProducts.length} items` : `معروض ${filteredProducts.length} منتج`}
                   </span>
                 </div>
 
@@ -995,9 +990,9 @@ export default function StoreView({
                   className="w-full overflow-x-auto flex gap-4 sm:gap-6 justify-start py-2 px-1 scrollbar-none" 
                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
-                  {['ط§ظ„ظƒظ„', ...(store.categories && store.categories.length > 0 ? store.categories : Array.from(new Set(storeProducts.map(p => p.category))))].map((cat) => {
+                  {['الكل', ...(store.categories && store.categories.length > 0 ? store.categories : Array.from(new Set(storeProducts.map(p => p.category))))].map((cat) => {
                     const isSel = selectedCategory === cat;
-                    const visual = CATEGORY_VISUALS[cat] || { icon: 'ًں“¦', color: 'from-zinc-850 to-zinc-900' };
+                    const visual = CATEGORY_VISUALS[cat] || { icon: '📦', color: 'from-zinc-850 to-zinc-900' };
                     return (
                       <button
                         key={cat}
@@ -1454,19 +1449,19 @@ export default function StoreView({
                 {/* Fashion Coupon tag */}
                 <div className="bg-gradient-to-r from-amber-500/10 to-red-500/10 border-2 border-dashed border-amber-500/30 p-4 rounded-2xl flex items-center justify-between flex-wrap gap-2 text-right">
                   <div>
-                    <span className="text-[10px] font-black text-amber-500 uppercase block mb-0.5">ط®طµظˆظ…ط§طھ ظ†ظ‡ط§ظٹط© ط§ظ„ظ…ظˆط³ظ… ط§ظ„ظƒط¨ط±ظ‰ ًں§¥</span>
-                    <h4 className="text-xs font-extrabold text-white">ط§ط³طھط®ط¯ظ… ظƒظˆط¨ظˆظ† <span className="text-amber-400 font-mono">FASHION10</span> ظ„ظ„ط­طµظˆظ„ ط¹ظ„ظ‰ ط®طµظ… 10% ط¥ط¶ط§ظپظٹ ظپظˆط±ظٹ!</h4>
+                    <span className="text-[10px] font-black text-amber-500 uppercase block mb-0.5">خصومات نهاية الموسم الكبرى 🧥</span>
+                    <h4 className="text-xs font-extrabold text-white">استخدم كوبون <span className="text-amber-400 font-mono">FASHION10</span> للحصول على خصم 10% إضافي فوري!</h4>
                   </div>
-                  <span className="px-3 py-1 bg-white text-black font-black text-[10px] rounded-lg uppercase">طھظ†ط´ظٹط· ط§ظ„ظƒظˆط¯</span>
+                  <span className="px-3 py-1 bg-white text-black font-black text-[10px] rounded-lg uppercase">تنشيط الكود</span>
                 </div>
 
                 {/* Staggered Modern Fashion view */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                   {/* Quick Categories list */}
                   <div className="bg-zinc-950 p-4 rounded-2xl border" style={{ borderColor: 'var(--store-frame)' }}>
-                    <h3 className="text-xs font-bold text-white border-b pb-2 mb-3" style={{ borderColor: 'var(--store-frame)' }}>ظ…ط¬ظ…ظˆط¹ط§طھ ط§ظ„ط£ط²ظٹط§ط،</h3>
+                    <h3 className="text-xs font-bold text-white border-b pb-2 mb-3" style={{ borderColor: 'var(--store-frame)' }}>مجموعات الأزياء</h3>
                     <div className="flex flex-col gap-1">
-                      <button onClick={() => setSelectedCategory('ط§ظ„ظƒظ„')} className={`px-3 py-2 text-right text-xs rounded-xl transition-all font-semibold ${selectedCategory === 'ط§ظ„ظƒظ„' ? 'bg-amber-400 text-black font-black' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'}`}>ط§ظ„ظƒظ„ ({storeProducts.length})</button>
+                      <button onClick={() => setSelectedCategory('الكل')} className={`px-3 py-2 text-right text-xs rounded-xl transition-all font-semibold ${selectedCategory === 'الكل' ? 'bg-amber-400 text-black font-black' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'}`}>الكل ({storeProducts.length})</button>
                       {store.categories.map((c, i) => (
                         <button key={i} onClick={() => setSelectedCategory(c)} className={`px-3 py-2 text-right text-xs rounded-xl transition-all font-semibold ${selectedCategory === c ? 'bg-amber-400 text-black font-black' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'}`}>{c}</button>
                       ))}
@@ -1487,7 +1482,7 @@ export default function StoreView({
                           <p className="text-[10px] text-zinc-400 line-clamp-2 mt-1 leading-relaxed" style={{ color: 'var(--store-text)' }}>{product.description}</p>
                           <div className="flex items-center justify-between mt-3 pt-2 border-t border-zinc-900">
                             <span className="text-white font-black font-mono text-xs">{product.price} {currencySymbol}</span>
-                            <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-2.5 py-1 bg-white text-black font-bold text-[9px] rounded-lg hover:bg-amber-400 cursor-pointer">ط§ظ‚طھظ†ط§ط، ًں›چï¸ڈ</button>
+                            <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-2.5 py-1 bg-white text-black font-bold text-[9px] rounded-lg hover:bg-amber-400 cursor-pointer">اقتناء 🛍️</button>
                           </div>
                         </div>
                       </div>
@@ -1501,9 +1496,9 @@ export default function StoreView({
             {templateType === 'perfume' && (
               <div className="space-y-6">
                 <div className="text-center max-w-lg mx-auto py-4">
-                  <span className="text-[9px] text-amber-500 font-extrabold uppercase tracking-widest block mb-1">ط¹ط·ظˆط± ط§ظ„ظ†ظٹط´ ظˆط§ظ„ط±ظˆط§ط¦ط­ ط§ظ„ط´ط±ظ‚ظٹط© ًں•Œ</span>
-                  <h3 className="text-xl font-extrabold text-white mb-2" style={{ fontFamily: 'Georgia, serif' }}>ظ…ط¬ظ…ظˆط¹ط© ط§ظ„ط¹ط·ظˆط± ط§ظ„ظپط§ط®ط±ط©</h3>
-                  <p className="text-xs text-zinc-400 leading-relaxed" style={{ color: 'var(--store-text)' }}>ط§ظ†ط؛ظ…ط³ ظپظٹ ظ…ط²ظٹط¬ ظپط§ط®ط± ظ…ظ† ط§ظ„ط¹ظˆط¯ ظˆط§ظ„ظ…ط³ظƒ ظˆط§ظ„ط¹ظ†ط¨ط± ط§ظ„ط°ظٹ ظٹط¹ط¨ط± ط¹ظ† ط§ظ„ظپط®ط§ظ…ط© ظˆط§ظ„ط±ظˆط¹ط© ط§ظ„ط´ط±ظ‚ظٹط© ط§ظ„ط£طµظٹظ„ط©.</p>
+                  <span className="text-[9px] text-amber-500 font-extrabold uppercase tracking-widest block mb-1">عطور النيش والروائح الشرقية 🕌</span>
+                  <h3 className="text-xl font-extrabold text-white mb-2" style={{ fontFamily: 'Georgia, serif' }}>مجموعة العطور الفاخرة</h3>
+                  <p className="text-xs text-zinc-400 leading-relaxed" style={{ color: 'var(--store-text)' }}>انغمس في مزيج فاخر من العود والمسك والعنبر الذي يعبر عن الفخامة والروعة الشرقية الأصيلة.</p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -1511,7 +1506,7 @@ export default function StoreView({
                     <div key={product.id} onClick={() => setSelectedProduct(product)} className="group relative bg-black/80 border rounded-2xl overflow-hidden p-4 cursor-pointer text-center space-y-3 hover:shadow-[0_10px_30px_rgba(212,175,55,0.08)] transition-all duration-300" style={{ borderColor: 'var(--store-primary)' }}>
                       <div className="aspect-square bg-zinc-950 rounded-xl overflow-hidden relative border" style={{ borderColor: 'var(--store-frame)' }}>
                         <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
-                        <span className="absolute bottom-2 left-2 bg-black/80 text-[#D4AF37] border border-[#D4AF37]/40 text-[8px] px-2 py-0.5 rounded-full font-bold">ط¹ط·ظˆط± ظپط§ط®ط±ط©</span>
+                        <span className="absolute bottom-2 left-2 bg-black/80 text-[#D4AF37] border border-[#D4AF37]/40 text-[8px] px-2 py-0.5 rounded-full font-bold">عطور فاخرة</span>
                       </div>
                       
                       <div className="space-y-1">
@@ -1522,7 +1517,7 @@ export default function StoreView({
 
                       <div className="pt-2 border-t flex items-center justify-between" style={{ borderColor: 'var(--store-frame)' }}>
                         <span className="text-[#D4AF37] font-bold font-mono text-xs">{product.price} {currencySymbol}</span>
-                        <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-3 py-1.5 bg-[#D4AF37] hover:bg-white text-black font-extrabold text-[9px] rounded-xl transition-all cursor-pointer">ط·ظ„ط¨ ظپظˆط±ظٹ âڑ،</button>
+                        <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-3 py-1.5 bg-[#D4AF37] hover:bg-white text-black font-extrabold text-[9px] rounded-xl transition-all cursor-pointer">طلب فوري âڑ،</button>
                       </div>
                     </div>
                   ))}
@@ -1536,10 +1531,10 @@ export default function StoreView({
                 {/* Athletic dynamic tag banner */}
                 <div className="bg-gradient-to-r from-red-600 to-orange-500 text-white p-4 rounded-3xl flex items-center justify-between text-right shadow-lg">
                   <div>
-                    <span className="text-[9px] font-black uppercase tracking-widest block bg-white/25 px-2 py-0.5 rounded-full self-start max-w-max mb-1">ط§ظ„ط³ط±ط¹ط© ظˆط§ظ„ط±ط§ط­ط© ط§ظ„ظƒظ„ظٹط© ًں‘ں</span>
-                    <h4 className="text-xs sm:text-sm font-black">ط£ط­ط°ظٹط© ط±ظٹط§ط¶ظٹط© ظˆط·ط¨ظٹط© ظ…ظ‚ط§ظˆظ…ط© ظ„ظ„ط§ظ†ط²ظ„ط§ظ‚ ط¨ط£ظپط¶ظ„ ط§ظ„ط£ط³ط¹ط§ط±</h4>
+                    <span className="text-[9px] font-black uppercase tracking-widest block bg-white/25 px-2 py-0.5 rounded-full self-start max-w-max mb-1">السرعة والراحة الكلية 👟</span>
+                    <h4 className="text-xs sm:text-sm font-black">أحذية رياضية وطبية مقاومة للانزلاق بأفضل الأسعار</h4>
                   </div>
-                  <span className="px-3 py-1.5 bg-black text-white font-black text-[10px] rounded-xl">ط´ط§ظ‡ط¯ ط§ظ„ط¹ط±ظˆط¶</span>
+                  <span className="px-3 py-1.5 bg-black text-white font-black text-[10px] rounded-xl">شاهد العروض</span>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -1556,7 +1551,7 @@ export default function StoreView({
                       </div>
                       <div className="flex items-center justify-between mt-3 pt-2 border-t border-zinc-800">
                         <span className="text-red-500 font-bold font-mono text-xs">{product.price} {currencySymbol}</span>
-                        <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-2.5 py-1 bg-red-600 hover:bg-red-500 text-white font-black text-[9px] rounded-lg cursor-pointer">ط´ط±ط§ط، âڑ،</button>
+                        <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-2.5 py-1 bg-red-600 hover:bg-red-500 text-white font-black text-[9px] rounded-lg cursor-pointer">شراء âڑ،</button>
                       </div>
                     </div>
                   ))}
@@ -1570,16 +1565,16 @@ export default function StoreView({
                 {/* Tech specifications grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="bg-blue-950/20 border border-blue-500/25 p-4 rounded-2xl text-right">
-                    <span className="text-xs font-black text-blue-400 block mb-1">ًں›،ï¸ڈ ط¶ظ…ط§ظ† ط§ظ„ظˆظƒظٹظ„ ط§ظ„ط±ط³ظ…ظٹ</span>
-                    <p className="text-[10px] text-zinc-400">ط¬ظ…ظٹط¹ ط§ظ„ط£ط¬ظ‡ط²ط© ط§ظ„ظƒظ‡ط±ط¨ط§ط¦ظٹط© ظ…ط´ظ…ظˆظ„ط© ط¨ط¶ظ…ط§ظ† ط§ط³طھط¨ط¯ط§ظ„ ظˆطµظٹط§ظ†ط© ط±ط³ظ…ظٹ ظ„ظ…ط¯ط© ط³ظ†طھظٹظ†.</p>
+                    <span className="text-xs font-black text-blue-400 block mb-1">🛡️ ضمان الوكيل الرسمي</span>
+                    <p className="text-[10px] text-zinc-400">جميع الأجهزة الكهربائية مشمولة بضمان استبدال وصيانة رسمي لمدة سنتين.</p>
                   </div>
                   <div className="bg-blue-950/20 border border-blue-500/25 p-4 rounded-2xl text-right">
-                    <span className="text-xs font-black text-blue-400 block mb-1">ًںڑڑ ط´ط­ظ† ط¢ظ…ظ† ظˆط³ط±ظٹط¹</span>
-                    <p className="text-[10px] text-zinc-400">ط´ط­ظ† ط¢ظ…ظ† ظ„ظ„ط£ط¬ظ‡ط²ط© ط§ظ„ظƒط¨ظٹط±ط© ظ…ط¹ ط¶ظ…ط§ظ† ط§ظ„ط³ظ„ط§ظ…ط© ظ…ظ† ط£ظٹ ط®ط¯ط´ ظˆطھظˆطµظٹظ„ ظ„ط¨ط§ط¨ ظ…ظ†ط²ظ„ظƒ.</p>
+                    <span className="text-xs font-black text-blue-400 block mb-1">🚚 شحن آمن وسريع</span>
+                    <p className="text-[10px] text-zinc-400">شحن آمن للأجهزة الكبيرة مع ضمان السلامة من أي خدش وتوصيل لباب منزلك.</p>
                   </div>
                   <div className="bg-blue-950/20 border border-blue-500/25 p-4 rounded-2xl text-right">
-                    <span className="text-xs font-black text-blue-400 block mb-1">ًں’³ ط¨ظˆط§ط¨ط§طھ ط¯ظپط¹ ظ…ظٹط³ط±ط©</span>
-                    <p className="text-[10px] text-zinc-400">ط§ط¯ظپط¹ ط¹ظ†ط¯ ط§ظ„ط§ط³طھظ„ط§ظ…طŒ ط£ظˆ ط¨ط§ظ„طھظ‚ط³ظٹط· ط§ظ„ظ…ظٹط³ط±طŒ ط£ظˆ ط¹ط¨ط± ط§ظ„طھط­ظˆظٹظ„ ط§ظ„ط¨ظ†ظƒظٹ ط§ظ„ظپظˆط±ظٹ.</p>
+                    <span className="text-xs font-black text-blue-400 block mb-1">💳 بوابات دفع ميسرة</span>
+                    <p className="text-[10px] text-zinc-400">ادفع عند الاستلام، أو بالتقسيط الميسر، أو عبر التحويل البنكي الفوري.</p>
                   </div>
                 </div>
 
@@ -1588,7 +1583,7 @@ export default function StoreView({
                     <div key={product.id} onClick={() => setSelectedProduct(product)} className="group bg-zinc-950 border rounded-2xl p-3 cursor-pointer flex flex-col justify-between hover:border-blue-500/40 hover:shadow-lg transition-all" style={{ borderColor: 'var(--store-frame)' }}>
                       <div className="aspect-square bg-zinc-900 rounded-xl overflow-hidden relative shrink-0">
                         <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-all" referrerPolicy="no-referrer" />
-                        <span className="absolute top-2 right-2 bg-blue-600 text-white font-black text-[8px] px-2 py-0.5 rounded-full">ط¶ظ…ط§ظ† ط³ظ†طھظٹظ†</span>
+                        <span className="absolute top-2 right-2 bg-blue-600 text-white font-black text-[8px] px-2 py-0.5 rounded-full">ضمان سنتين</span>
                       </div>
                       <div className="mt-2.5 flex-1">
                         <span className="text-[9px] text-blue-400 font-bold uppercase">{product.category}</span>
@@ -1597,7 +1592,7 @@ export default function StoreView({
                       </div>
                       <div className="flex items-center justify-between mt-3 pt-2 border-t border-zinc-800">
                         <span className="text-blue-400 font-bold font-mono text-xs">{product.price} {currencySymbol}</span>
-                        <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-2.5 py-1 bg-blue-600 hover:bg-blue-500 text-white font-black text-[9px] rounded-lg cursor-pointer">ط§ط·ظ„ط¨ ط§ظ„ط¢ظ† âڑ،</button>
+                        <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-2.5 py-1 bg-blue-600 hover:bg-blue-500 text-white font-black text-[9px] rounded-lg cursor-pointer">اطلب الآن âڑ،</button>
                       </div>
                     </div>
                   ))}
@@ -1613,11 +1608,11 @@ export default function StoreView({
                   <div className="bg-zinc-950 border rounded-2xl p-4" style={{ borderColor: 'var(--store-frame)' }}>
                     <h3 className="text-xs font-black text-white mb-3 pb-2 border-b flex items-center gap-1.5" style={{ borderColor: 'var(--store-frame)' }}>
                       <Sparkle size={14} style={{ color: 'var(--store-primary)' }} />
-                      <span>ط£ظ‚ط³ط§ظ… ط§ظ„ظ…طھط¬ط± ط§ظ„ط´ط§ظ…ظ„</span>
+                      <span>أقسام المتجر الشامل</span>
                     </h3>
                     
                     <div className="flex flex-col gap-1">
-                      <button onClick={() => setSelectedCategory('ط§ظ„ظƒظ„')} className={`px-3 py-2 text-xs font-semibold text-right rounded-xl transition-all cursor-pointer ${selectedCategory === 'ط§ظ„ظƒظ„' ? 'bg-amber-400 text-black font-black' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'}`}>ظƒظ„ ط§ظ„ظ…ظ†طھط¬ط§طھ ({storeProducts.length})</button>
+                      <button onClick={() => setSelectedCategory('الكل')} className={`px-3 py-2 text-xs font-semibold text-right rounded-xl transition-all cursor-pointer ${selectedCategory === 'الكل' ? 'bg-amber-400 text-black font-black' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'}`}>كل المنتجات ({storeProducts.length})</button>
                       {store.categories.map((cat, idx) => (
                         <button key={idx} onClick={() => setSelectedCategory(cat)} className={`px-3 py-2 text-xs font-semibold text-right rounded-xl transition-all cursor-pointer ${selectedCategory === cat ? 'bg-amber-400 text-black font-black' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'}`}>{cat}</button>
                       ))}
@@ -1626,16 +1621,16 @@ export default function StoreView({
 
                   {/* Standard info */}
                   <div className="bg-zinc-900/20 border rounded-2xl p-4 text-[11px] text-zinc-400 space-y-2 leading-relaxed text-right" style={{ borderColor: 'var(--store-frame)' }}>
-                    <h4 className="font-bold text-zinc-300 flex items-center gap-1">ًں“¦ ط´ط­ظ† ظ„ظƒط§ظپط© ط§ظ„ظ…ط­ط§ظپط¸ط§طھ</h4>
-                    <p>ظ†ظ‚ظˆظ… ط¨طھط³ظ„ظٹظ… ط·ظ„ط¨ط§طھظƒ ط¨ط£ظ‚طµظ‰ ط³ط±ط¹ط© ظ…ظ…ظƒظ†ط© ظ…ظ† ظ…ط³طھظˆط¯ط¹ظ†ط§ ط§ظ„ط±ط¦ظٹط³ظٹ ظ…ط¨ط§ط´ط±ط© ط¥ظ„ظ‰ ط¨ط§ط¨ظƒ.</p>
+                    <h4 className="font-bold text-zinc-300 flex items-center gap-1">📦 شحن لكافة المحافظات</h4>
+                    <p>نقوم بتسليم طلباتك بأقصى سرعة ممكنة من مستودعنا الرئيسي مباشرة إلى بابك.</p>
                   </div>
                 </div>
 
                 {/* Left products grid */}
                 <div className="md:col-span-9 space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-black text-white">ط§ظ„ظ…ظ†طھط¬ط§طھ ط§ظ„ط£ظƒط«ط± ظ…ط¨ظٹط¹ط§ظ‹ ًںŒں</h3>
-                    <span className="text-[10px] text-zinc-500">ظ…ط¹ط±ظˆط¶ {filteredProducts.length} ظ…ظ†طھط¬</span>
+                    <h3 className="text-xs font-black text-white">المنتجات الأكثر مبيعاً 🌟</h3>
+                    <span className="text-[10px] text-zinc-500">معروض {filteredProducts.length} منتج</span>
                   </div>
 
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
@@ -1653,7 +1648,7 @@ export default function StoreView({
                           
                           <div className="flex items-center justify-between mt-3 pt-2 border-t border-zinc-900">
                             <span className="text-white font-bold font-mono text-xs">{product.price} {currencySymbol}</span>
-                            <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-2.5 py-1 bg-amber-400 hover:bg-amber-300 text-black font-extrabold text-[9px] rounded-lg transition-colors cursor-pointer">ط§ط·ظ„ط¨ ظپظˆط±ظٹ âڑ،</button>
+                            <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-2.5 py-1 bg-amber-400 hover:bg-amber-300 text-black font-extrabold text-[9px] rounded-lg transition-colors cursor-pointer">اطلب فوري âڑ،</button>
                           </div>
                         </div>
                       </div>
@@ -1676,7 +1671,7 @@ export default function StoreView({
                   }
                 `}</style>
 
-                {/* ظ‚ظ„ط¨ ط§ظ„ظ…طھط¬ط± - ظٹط¸ظ‡ط± ظپظٹ ط§ظ„ظ…طھط¬ط± ظ†ظپط³ظ‡ */}
+                {/* قلب المتجر - يظهر في المتجر نفسه */}
                 <div className="bg-zinc-900/40 border border-pink-500/20 rounded-3xl p-4 flex flex-col items-center">
                   <PhoneCasesHeart
                     storeName={store.name}
@@ -1688,14 +1683,14 @@ export default function StoreView({
 
                 {/* Promo Banner */}
                 <div className="bg-gradient-to-r from-pink-600 via-rose-500 to-purple-600 rounded-3xl p-6 text-right text-white shadow-lg">
-                  <span className="text-[9px] font-black uppercase tracking-widest bg-white/20 px-2 py-0.5 rounded-full">ط£ط­ط¯ط« طھط´ظƒظٹظ„ط© طµظٹظ†ط§طھ ظˆط­ظ…ط§ظٹط§طھ ًں“±</span>
-                  <h3 className="text-lg font-black mt-2">ظƒظپط±ط§طھ ط¬ظˆط§ظ„ ط¨طھطµط§ظ…ظٹظ… ط­طµط±ظٹط© طھظ†ط§ط³ط¨ ظƒظ„ ط§ظ„ط£ط°ظˆط§ظ‚</h3>
-                  <p className="text-xs text-white/80 mt-1">ط£ط¬ظˆط¯ ط§ظ„ط®ط§ظ…ط§طھطŒ ط£ط±ط®طµ ط§ظ„ط£ط³ط¹ط§ط±طŒ طھظˆطµظٹظ„ ط³ط±ظٹط¹ ظ„ط¨ط§ط¨ ط§ظ„ط¨ظٹطھ</p>
+                  <span className="text-[9px] font-black uppercase tracking-widest bg-white/20 px-2 py-0.5 rounded-full">أحدث تشكيلة صينات وحمايات 📱</span>
+                  <h3 className="text-lg font-black mt-2">كفرات جوال بتصاميم حصرية تناسب كل الأذواق</h3>
+                  <p className="text-xs text-white/80 mt-1">أجود الخامات، أرخص الأسعار، توصيل سريع لباب البيت</p>
                 </div>
 
                 {/* Categories Pills */}
                 <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
-                  {['ط§ظ„ظƒظ„', ...(store.categories.length > 0 ? store.categories : ['ظƒظپط±ط§طھ', 'ط­ظ…ط§ظٹط§طھ', 'ط´ظˆط§ط­ظ†', 'ط¥ظƒط³ط³ظˆط§ط±ط§طھ'])].map(cat => (
+                  {['الكل', ...(store.categories.length > 0 ? store.categories : ['كفرات', 'حمايات', 'شواحن', 'إكسسوارات'])].map(cat => (
                     <button
                       key={cat}
                       onClick={() => setSelectedCategory(cat)}
@@ -1723,7 +1718,7 @@ export default function StoreView({
                         <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
                         {product.isOffer && (
                           <span className="absolute top-2 right-2 bg-gradient-to-r from-pink-600 to-rose-600 text-white font-black text-[9px] px-2 py-0.5 rounded-full shadow-lg">
-                            {product.offerText || 'ط¹ط±ط¶'}
+                            {product.offerText || 'عرض'}
                           </span>
                         )}
                       </div>
@@ -1735,7 +1730,7 @@ export default function StoreView({
                         </div>
                         <div className="flex items-center justify-between mt-3 pt-2 border-t border-zinc-800">
                           <span className="text-pink-400 font-black font-mono text-sm">{product.price} {currencySymbol}</span>
-                          <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-3 py-1.5 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-black text-[9px] rounded-xl transition-all cursor-pointer shadow-md">ط´ط±ط§ط، ًں›چï¸ڈ</button>
+                          <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-3 py-1.5 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-black text-[9px] rounded-xl transition-all cursor-pointer shadow-md">شراء 🛍️</button>
                         </div>
                       </div>
                     </div>
@@ -1751,17 +1746,17 @@ export default function StoreView({
                 <div className="bg-gradient-to-l from-green-800 to-emerald-900 rounded-3xl p-6 text-right text-white shadow-lg border border-green-500/20">
                   <div className="flex items-center justify-between flex-wrap gap-2">
                     <div>
-                      <span className="text-[9px] font-black uppercase tracking-widest bg-green-500/20 px-2 py-0.5 rounded-full text-green-300">ط¹ط±ظˆط¶ ط§ظ„ط£ط³ط¨ظˆط¹ ط§ظ„ط·ط§ط²ط¬ط© ًں¥¦</span>
-                      <h3 className="text-lg font-black mt-2">ظƒظ„ ظ…ط³طھظ„ط²ظ…ط§طھظƒ ط§ظ„ظٹظˆظ…ظٹط© ط¨ط£ظپط¶ظ„ ط§ظ„ط£ط³ط¹ط§ط±</h3>
-                      <p className="text-xs text-green-200/80 mt-1">ظ…ظ†طھط¬ط§طھ ط·ط§ط²ط¬ط©طŒ طھظˆطµظٹظ„ ظ…ط¬ط§ظ†ظٹ ظ„ظ„ط·ظ„ط¨ط§طھ ظپظˆظ‚ 100 ط±.ط³</p>
+                      <span className="text-[9px] font-black uppercase tracking-widest bg-green-500/20 px-2 py-0.5 rounded-full text-green-300">عروض الأسبوع الطازجة 🥦</span>
+                      <h3 className="text-lg font-black mt-2">كل مستلزماتك اليومية بأفضل الأسعار</h3>
+                      <p className="text-xs text-green-200/80 mt-1">منتجات طازجة، توصيل مجاني للطلبات فوق 100 ر.س</p>
                     </div>
-                    <span className="text-3xl">ًں›’</span>
+                    <span className="text-3xl">🛒</span>
                   </div>
                 </div>
 
                 {/* Category Tabs */}
                 <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
-                  {['ط§ظ„ظƒظ„', ...(store.categories.length > 0 ? store.categories : ['ظ…ظˆط§ط¯ ط؛ط°ط§ط¦ظٹط©', 'ظ…ط´ط±ظˆط¨ط§طھ', 'ظ…ظ†ط¸ظپط§طھ', 'ط·ط§ط²ط¬'])].map(cat => (
+                  {['الكل', ...(store.categories.length > 0 ? store.categories : ['مواد غذائية', 'مشروبات', 'منظفات', 'طازج'])].map(cat => (
                     <button
                       key={cat}
                       onClick={() => setSelectedCategory(cat)}
@@ -1787,7 +1782,7 @@ export default function StoreView({
                       <div className="relative aspect-square bg-zinc-950 overflow-hidden">
                         <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
                         {product.isOffer && (
-                          <span className="absolute top-2 right-2 bg-green-600 text-white font-black text-[9px] px-2 py-0.5 rounded-full">{product.offerText || 'ط¹ط±ط¶ ط®ط§طµ'}</span>
+                          <span className="absolute top-2 right-2 bg-green-600 text-white font-black text-[9px] px-2 py-0.5 rounded-full">{product.offerText || 'عرض خاص'}</span>
                         )}
                       </div>
                       <div className="p-3 flex-1 flex flex-col justify-between">
@@ -1798,7 +1793,7 @@ export default function StoreView({
                         </div>
                         <div className="flex items-center justify-between mt-3 pt-2 border-t border-zinc-800">
                           <span className="text-green-400 font-black font-mono text-sm">{product.price} {currencySymbol}</span>
-                          <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-3 py-1.5 bg-green-600 hover:bg-green-500 text-white font-black text-[9px] rounded-xl transition-all cursor-pointer">ط£ط·ظ„ط¨ ًں›’</button>
+                          <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-3 py-1.5 bg-green-600 hover:bg-green-500 text-white font-black text-[9px] rounded-xl transition-all cursor-pointer">أطلب 🛒</button>
                         </div>
                       </div>
                     </div>
@@ -1812,14 +1807,14 @@ export default function StoreView({
               <div className="space-y-6">
                 {/* Home Banner */}
                 <div className="bg-gradient-to-l from-amber-800 to-yellow-900 rounded-3xl p-6 text-right text-white shadow-lg border border-amber-500/20">
-                  <span className="text-[9px] font-black uppercase tracking-widest bg-amber-500/20 px-2 py-0.5 rounded-full text-amber-300">ط£ط¯ظˆط§طھ ظ…ظ†ط²ظ„ظٹط© ظˆط¯ظٹظƒظˆط±ط§طھ ط¹طµط±ظٹط© ًںڈ </span>
-                  <h3 className="text-lg font-black mt-2">ط¬ظ‡ط² ط¨ظٹطھظƒ ط¨ط£ط­ط¯ط« ط§ظ„ظ…ط³طھظ„ط²ظ…ط§طھ</h3>
-                  <p className="text-xs text-amber-200/80 mt-1">ط£ط·ظ‚ظ… ظ‚ط¯ظˆط±طŒ ط¯ظٹظƒظˆط±ط§طھطŒ ظˆط£ط¬ظ‡ط²ط© ظ…ظ†ط²ظ„ظٹط© ط¨ط¬ظˆط¯ط© ط¹ط§ظ„ظٹط© ظˆط£ط³ط¹ط§ط± ظ…ظ†ط§ظپط³ط©</p>
+                  <span className="text-[9px] font-black uppercase tracking-widest bg-amber-500/20 px-2 py-0.5 rounded-full text-amber-300">أدوات منزلية وديكورات عصرية 🏠</span>
+                  <h3 className="text-lg font-black mt-2">جهز بيتك بأحدث المستلزمات</h3>
+                  <p className="text-xs text-amber-200/80 mt-1">أطقم قدور، ديكورات، وأجهزة منزلية بجودة عالية وأسعار منافسة</p>
                 </div>
 
                 {/* Category Pills */}
                 <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
-                  {['ط§ظ„ظƒظ„', ...(store.categories.length > 0 ? store.categories : ['ط£ط¯ظˆط§طھ ظ…ظ†ط²ظ„ظٹط©', 'ظ…ط·ط¨ط®', 'ط¯ظٹظƒظˆط±', 'ط£ط¬ظ‡ط²ط©'])].map(cat => (
+                  {['الكل', ...(store.categories.length > 0 ? store.categories : ['أدوات منزلية', 'مطبخ', 'ديكور', 'أجهزة'])].map(cat => (
                     <button
                       key={cat}
                       onClick={() => setSelectedCategory(cat)}
@@ -1845,7 +1840,7 @@ export default function StoreView({
                       <div className="relative aspect-square bg-zinc-950 overflow-hidden">
                         <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
                         {product.isOffer && (
-                          <span className="absolute top-2 right-2 bg-amber-600 text-white font-black text-[9px] px-2 py-0.5 rounded-full">{product.offerText || 'ط®طµظ…'}</span>
+                          <span className="absolute top-2 right-2 bg-amber-600 text-white font-black text-[9px] px-2 py-0.5 rounded-full">{product.offerText || 'خصم'}</span>
                         )}
                       </div>
                       <div className="p-3 flex-1 flex flex-col justify-between">
@@ -1856,7 +1851,7 @@ export default function StoreView({
                         </div>
                         <div className="flex items-center justify-between mt-3 pt-2 border-t border-zinc-800">
                           <span className="text-amber-400 font-black font-mono text-sm">{product.price} {currencySymbol}</span>
-                          <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-black text-[9px] rounded-xl transition-all cursor-pointer">ط§ط´طھط±ظٹ ًں›چï¸ڈ</button>
+                          <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-black text-[9px] rounded-xl transition-all cursor-pointer">اشتري 🛍️</button>
                         </div>
                       </div>
                     </div>
@@ -1872,9 +1867,9 @@ export default function StoreView({
                 <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 rounded-3xl p-6 text-right text-white shadow-lg border border-blue-500/20">
                   <div className="flex items-center justify-between flex-wrap gap-2">
                     <div>
-                      <span className="text-[9px] font-black uppercase tracking-widest bg-blue-500/20 px-2 py-0.5 rounded-full text-blue-300">ط£ط­ط¯ط« ط§ظ„طھظ‚ظ†ظٹط§طھ ظˆط§ظ„ط£ط¬ظ‡ط²ط© ًں’»</span>
-                      <h3 className="text-lg font-black mt-2">ظ„ط§ط¨طھظˆط¨ط§طھ ظˆظƒظ…ط¨ظٹظˆطھط±ط§طھ ط¨ط£ط¹ظ„ظ‰ ط§ظ„ظ…ظˆط§طµظپط§طھ</h3>
-                      <p className="text-xs text-blue-200/80 mt-1">ط£ط¬ظ‡ط²ط© ط£ظ„ط¹ط§ط¨طŒ ط¹ظ…ظ„طŒ ظˆظ…ظ„ط­ظ‚ط§طھ ط¬ط±ط§ظپظٹظƒ ط§ط­طھط±ط§ظپظٹط©</p>
+                      <span className="text-[9px] font-black uppercase tracking-widest bg-blue-500/20 px-2 py-0.5 rounded-full text-blue-300">أحدث التقنيات والأجهزة 💻</span>
+                      <h3 className="text-lg font-black mt-2">لابتوبات وكمبيوترات بأعلى المواصفات</h3>
+                      <p className="text-xs text-blue-200/80 mt-1">أجهزة ألعاب، عمل، وملحقات جرافيك احترافية</p>
                     </div>
                     <span className="text-3xl">âڑ،</span>
                   </div>
@@ -1883,22 +1878,22 @@ export default function StoreView({
                 {/* Spec Highlights */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="bg-blue-950/20 border border-blue-500/20 p-3 rounded-2xl text-right">
-                    <span className="text-xs font-black text-blue-400">âڑ، ظ…ط¹ط§ظ„ط¬ط§طھ ط§ظ„ط¬ظٹظ„ ط§ظ„ط¬ط¯ظٹط¯</span>
-                    <p className="text-[10px] text-zinc-400 mt-1">Intel Core Ultra ظˆ AMD Ryzen 9000</p>
+                    <span className="text-xs font-black text-blue-400">âڑ، معالجات الجيل الجديد</span>
+                    <p className="text-[10px] text-zinc-400 mt-1">Intel Core Ultra و AMD Ryzen 9000</p>
                   </div>
                   <div className="bg-blue-950/20 border border-blue-500/20 p-3 rounded-2xl text-right">
-                    <span className="text-xs font-black text-blue-400">ًںژ® ظƒط±ظˆطھ ط´ط§ط´ط© RTX</span>
-                    <p className="text-[10px] text-zinc-400 mt-1">ط£ط¯ط§ط، ط£ظ„ط¹ط§ط¨ ط§ط­طھط±ط§ظپظٹ ظ…ط¹ NVIDIA GeForce</p>
+                    <span className="text-xs font-black text-blue-400">🎮 كروت شاشة RTX</span>
+                    <p className="text-[10px] text-zinc-400 mt-1">أداء ألعاب احترافي مع NVIDIA GeForce</p>
                   </div>
                   <div className="bg-blue-950/20 border border-blue-500/20 p-3 rounded-2xl text-right">
-                    <span className="text-xs font-black text-blue-400">ًں”§ ط¶ظ…ط§ظ† ط³ظ†طھظٹظ†</span>
-                    <p className="text-[10px] text-zinc-400 mt-1">ط¶ظ…ط§ظ† ظ…ط¹طھظ…ط¯ ظˆظ‚ط·ط¹ ط؛ظٹط§ط± ط£طµظ„ظٹط© ظ…طھظˆظپط±ط©</p>
+                    <span className="text-xs font-black text-blue-400">🔧 ضمان سنتين</span>
+                    <p className="text-[10px] text-zinc-400 mt-1">ضمان معتمد وقطع غيار أصلية متوفرة</p>
                   </div>
                 </div>
 
                 {/* Category Pills */}
                 <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
-                  {['ط§ظ„ظƒظ„', ...(store.categories.length > 0 ? store.categories : ['ظ„ط§ط¨طھظˆط¨', 'ظ‚ط·ط¹ ظƒظ…ط¨ظٹظˆطھط±', 'ظ…ظ„ط­ظ‚ط§طھ', 'ط´ط§ط´ط§طھ'])].map(cat => (
+                  {['الكل', ...(store.categories.length > 0 ? store.categories : ['لابتوب', 'قطع كمبيوتر', 'ملحقات', 'شاشات'])].map(cat => (
                     <button
                       key={cat}
                       onClick={() => setSelectedCategory(cat)}
@@ -1925,7 +1920,7 @@ export default function StoreView({
                         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent" />
                         <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
                         {product.isOffer && (
-                          <span className="absolute top-2 right-2 bg-blue-600 text-white font-black text-[9px] px-2 py-0.5 rounded-full">{product.offerText || 'ط¹ط±ط¶'}</span>
+                          <span className="absolute top-2 right-2 bg-blue-600 text-white font-black text-[9px] px-2 py-0.5 rounded-full">{product.offerText || 'عرض'}</span>
                         )}
                       </div>
                       <div className="p-3 flex-1 flex flex-col justify-between">
@@ -1941,7 +1936,7 @@ export default function StoreView({
                               <span className="text-zinc-600 text-[9px] line-through mr-1">{product.originalPrice} {currencySymbol}</span>
                             )}
                           </div>
-                          <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-[9px] rounded-xl transition-all cursor-pointer shadow-md">ط§ط´طھط±ظٹ âڑ،</button>
+                          <button onClick={(e) => { e.stopPropagation(); openQuickCheckout(product); }} className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-[9px] rounded-xl transition-all cursor-pointer shadow-md">اشتري âڑ،</button>
                         </div>
                       </div>
                     </div>
@@ -1962,14 +1957,14 @@ export default function StoreView({
               {/* Category buttons slider */}
               <div className="flex gap-1.5 overflow-x-auto py-1" style={{ scrollbarWidth: 'none' }}>
                 <button
-                  onClick={() => setSelectedCategory('ط§ظ„ظƒظ„')}
+                  onClick={() => setSelectedCategory('الكل')}
                   className={`px-3 py-1.5 text-xs font-semibold rounded-lg cursor-pointer whitespace-nowrap transition-colors ${
-                    selectedCategory === 'ط§ظ„ظƒظ„'
+                    selectedCategory === 'الكل'
                       ? 'bg-white text-black font-bold'
                       : 'bg-zinc-950 text-zinc-400 hover:bg-zinc-900'
                   }`}
                 >
-                  ط§ظ„ظƒظ„ ({storeProducts.length})
+                  الكل ({storeProducts.length})
                 </button>
                 {store.categories.map((cat, idx) => (
                   <button
@@ -2004,7 +1999,7 @@ export default function StoreView({
                     />
                     {product.isOffer && (
                       <span className="absolute top-2 right-2 bg-red-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">
-                        ط¹ط±ط¶ ط®ط§طµ
+                        عرض خاص
                       </span>
                     )}
                   </div>
@@ -2042,7 +2037,7 @@ export default function StoreView({
                           }}
                           className="px-2 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-[10px] rounded-lg transition-colors cursor-pointer"
                         >
-                          <span>ط·ظ„ط¨ ط³ط±ظٹط¹ âڑ،</span>
+                          <span>طلب سريع âڑ،</span>
                         </button>
                       </div>
                     </div>
@@ -2058,7 +2053,7 @@ export default function StoreView({
           <div className="space-y-6">
             {offerProducts.length === 0 ? (
               <div className="text-center py-16 bg-zinc-900/20 border border-dashed border-zinc-800 rounded-3xl">
-                <p className="text-zinc-500 text-sm">ظ„ط§ طھطھظˆظپط± ط¹ط±ظˆط¶ طھط±ظˆظٹط¬ظٹط© ظ†ط´ط·ط© ط­ط§ظ„ظٹط§ظ‹ ظپظٹ ظ‡ط°ط§ ط§ظ„ظ…طھط¬ط±</p>
+                <p className="text-zinc-500 text-sm">لا تتوفر عروض ترويجية نشطة حالياً في هذا المتجر</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -2076,7 +2071,7 @@ export default function StoreView({
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                       <span className="absolute top-2 right-2 bg-red-600 text-white font-bold text-[10px] px-2.5 py-1 rounded-full animate-pulse shadow-md">
-                        {product.offerText || 'ط®طµظ… ظ…ظ…ظٹط²'}
+                        {product.offerText || 'خصم مميز'}
                       </span>
                     </div>
                     <div className="p-4 text-right">
@@ -2114,7 +2109,7 @@ export default function StoreView({
                             }}
                             className="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs rounded-lg transition-all cursor-pointer flex items-center gap-1"
                           >
-                            <span>ط´ط±ط§ط، ط³ط±ظٹط¹ âڑ،</span>
+                            <span>شراء سريع âڑ،</span>
                           </button>
                         </div>
                       </div>
@@ -2135,15 +2130,15 @@ export default function StoreView({
               <div className="md:col-span-5 bg-zinc-900/60 border border-zinc-800/80 p-6 rounded-2xl space-y-4">
                 <h3 className="text-base font-bold text-white flex items-center gap-2">
                   <MessageSquarePlus className="text-amber-500" size={18} />
-                  <span>ط§ظƒطھط¨ طھظ‚ظٹظٹظ…ظƒ ظˆطھط¬ط±ط¨طھظƒ ظ„ظ„طھط§ط¬ط±</span>
+                  <span>اكتب تقييمك وتجربتك للتاجر</span>
                 </h3>
                 
                 <form onSubmit={handleAddReviewSubmit} className="space-y-3">
                   <div>
-                    <label className="block text-zinc-400 text-xs font-semibold mb-1">ط§ط³ظ…ظƒ ط§ظ„ظƒط§ظ…ظ„</label>
+                    <label className="block text-zinc-400 text-xs font-semibold mb-1">اسمك الكامل</label>
                     <input
                       type="text"
-                      placeholder="ظ…ط«ط§ظ„: طµط§ظ„ط­ ط§ظ„ط±ظˆظٹظ„ظٹ"
+                      placeholder="مثال: صالح الرويلي"
                       value={newReviewName}
                       onChange={(e) => setNewReviewName(e.target.value)}
                       className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-amber-400 text-right"
@@ -2152,7 +2147,7 @@ export default function StoreView({
                   </div>
 
                   <div>
-                    <label className="block text-zinc-400 text-xs font-semibold mb-1">ط§ظ„طھظ‚ظٹظٹظ… ط¨ط§ظ„ظ†ط¬ظˆظ…</label>
+                    <label className="block text-zinc-400 text-xs font-semibold mb-1">التقييم بالنجوم</label>
                     <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map(star => (
                         <button
@@ -2168,9 +2163,9 @@ export default function StoreView({
                   </div>
 
                   <div>
-                    <label className="block text-zinc-400 text-xs font-semibold mb-1">ط§ظƒطھط¨ طھط¹ظ„ظٹظ‚ظƒ ظˆطھط¬ط±ط¨طھظƒ ط¨ط§ظ„طھظپطµظٹظ„</label>
+                    <label className="block text-zinc-400 text-xs font-semibold mb-1">اكتب تعليقك وتجربتك بالتفصيل</label>
                     <textarea
-                      placeholder="ظƒظٹظپ ظƒط§ظ†طھ ط¬ظˆط¯ط© ط§ظ„ظ…ظ†طھط¬ط§طھطŒ ط³ط±ط¹ط© ط§ظ„طھط¬ظ‡ظٹط²طŒ ظˆطھط¬ط±ط¨طھظƒ ط§ظ„ط¹ط§ظ…ط© ظ…ط¹ ط§ظ„ظ…ط­ظ„طں"
+                      placeholder="كيف كانت جودة المنتجات، سرعة التجهيز، وتجربتك العامة مع المحل؟"
                       value={newReviewComment}
                       onChange={(e) => setNewReviewComment(e.target.value)}
                       rows={4}
@@ -2183,7 +2178,7 @@ export default function StoreView({
                     type="submit"
                     className="w-full py-2 bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
                   >
-                    ط¥ط±ط³ط§ظ„ ط§ظ„طھظ‚ظٹظٹظ… ظپظˆط±ط§ظ‹
+                    إرسال التقييم فوراً
                   </button>
                 </form>
 
@@ -2195,7 +2190,7 @@ export default function StoreView({
                       exit={{ opacity: 0, y: 10 }}
                       className="bg-green-500/10 border border-green-500/20 rounded-xl p-3 text-green-400 text-xs text-center"
                     >
-                      âœ“ ط´ظƒط±ط§ظ‹ ظ„ظƒ! طھظ… ط¥ط±ط³ط§ظ„ ظ…ط±ط§ط¬ط¹طھظƒ ط¨ظ†ط¬ط§ط­ ظˆط³ظˆظپ طھط¸ظ‡ط± ظ…ط¨ط§ط´ط±ط©.
+                      âœ“ شكراً لك! تم إرسال مراجعتك بنجاح وسوف تظهر مباشرة.
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -2206,14 +2201,14 @@ export default function StoreView({
                 <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
                   <h3 className="text-base font-bold text-white flex items-center gap-2">
                     <MessageSquare size={18} className="text-zinc-400" />
-                    <span>ط¢ط±ط§ط، ظˆظ…ط±ط§ط¬ط¹ط§طھ ط§ظ„ظ…طھط³ظˆظ‚ظٹظ†</span>
+                    <span>آراء ومراجعات المتسوقين</span>
                   </h3>
-                  <span className="text-xs text-zinc-400">({storeReviews.length} ظ…ط±ط§ط¬ط¹ط©)</span>
+                  <span className="text-xs text-zinc-400">({storeReviews.length} مراجعة)</span>
                 </div>
 
                 {storeReviews.length === 0 ? (
                   <div className="text-center py-12 bg-zinc-900/20 border border-dashed border-zinc-800 rounded-2xl">
-                    <p className="text-zinc-500 text-sm">ظ„ط§ طھطھظˆظپط± ظ…ط±ط§ط¬ط¹ط§طھ ظ„ظ‡ط°ط§ ط§ظ„ظ…طھط¬ط± ط­طھظ‰ ط§ظ„ط¢ظ†. ظƒظ† ط£ظˆظ„ ظ…ظ† ظٹظƒطھط¨ طھظ‚ظٹظٹظ…ط§ظ‹!</p>
+                    <p className="text-zinc-500 text-sm">لا تتوفر مراجعات لهذا المتجر حتى الآن. كن أول من يكتب تقييماً!</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -2260,7 +2255,7 @@ export default function StoreView({
             
             <div>
               <h3 className="text-lg font-extrabold text-white">{store.name}</h3>
-              <p className="text-xs text-amber-500 font-bold mt-1">{store.category} ظپظٹ {store.city}{store.district ? ` - ${store.district}` : ''}</p>
+              <p className="text-xs text-amber-500 font-bold mt-1">{store.category} في {store.city}{store.district ? ` - ${store.district}` : ''}</p>
               <p className="text-zinc-400 text-xs mt-3 max-w-md mx-auto leading-relaxed">
                 {store.seoDescription || store.description}
               </p>
@@ -2271,7 +2266,7 @@ export default function StoreView({
                 <a href={`tel:${store.storePhone}`} className="bg-zinc-950 p-3.5 rounded-xl border border-zinc-800 flex items-center gap-3 hover:border-amber-500/30 transition-colors cursor-pointer">
                   <Phone className="text-amber-400 w-5 h-5 shrink-0" />
                   <div>
-                    <span className="text-[10px] text-zinc-500 block">ط§ظ„ظ‡ط§طھظپ ط§ظ„ظ…ط¨ط§ط´ط± ظ„ظ„ط·ظ„ط¨</span>
+                    <span className="text-[10px] text-zinc-500 block">الهاتف المباشر للطلب</span>
                     <span className="text-white text-xs font-semibold font-mono" dir="ltr">{store.storePhone}</span>
                   </div>
                 </a>
@@ -2281,8 +2276,8 @@ export default function StoreView({
                 <div className="bg-zinc-950 p-3.5 rounded-xl border border-zinc-800 flex items-center gap-3">
                   <MapPin className="text-amber-400 w-5 h-5 shrink-0" />
                   <div>
-                    <span className="text-[10px] text-zinc-500 block">ط§ظ„ط¹ظ†ظˆط§ظ†</span>
-                    <span className="text-white text-xs font-semibold">{store.district}{store.neighborhood ? `طŒ ${store.neighborhood}` : ''}طŒ {store.city}</span>
+                    <span className="text-[10px] text-zinc-500 block">العنوان</span>
+                    <span className="text-white text-xs font-semibold">{store.district}{store.neighborhood ? `، ${store.neighborhood}` : ''}، {store.city}</span>
                   </div>
                 </div>
               )}
@@ -2293,16 +2288,16 @@ export default function StoreView({
               <button
                 onClick={() => {
                   const url = `${window.location.origin}${window.location.pathname}#/store/${store.slug || store.id}`;
-                  navigator.clipboard.writeText(url).then(() => alert('طھظ… ظ†ط³ط® ط±ط§ط¨ط· ط§ظ„ظ…طھط¬ط±! ط´ط§ط±ظƒظ‡ ظ…ط¹ ط£ظٹ ط´ط®طµ'));
+                  navigator.clipboard.writeText(url).then(() => alert('تم نسخ رابط المتجر! شاركه مع أي شخص'));
                 }}
                 className="px-4 py-2 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold rounded-xl hover:bg-amber-500/20 transition-colors cursor-pointer flex items-center gap-2"
               >
-                ًں”— ظ†ط³ط® ط±ط§ط¨ط· ط§ظ„ظ…طھط¬ط± ظ„ظ„ظ…ط´ط§ط±ظƒط©
+                🔗 نسخ رابط المتجر للمشاركة
               </button>
             </div>
 
             <div className="bg-amber-500/5 border border-amber-500/10 p-4 rounded-xl text-xs text-zinc-400 text-center leading-relaxed">
-              ط¬ظ…ظٹط¹ ط§ظ„ظ…طھط§ط¬ط± ظˆط§ظ„ط·ظ„ط¨ط§طھ ط¯ط§ط®ظ„ ظ…ظ†طµط© MIX ظ…ط´ظ…ظˆظ„ط© ط¨ط¶ظ…ط§ظ† MIX ط§ظ„ظ…ظˆط­ط¯ ظˆط­ظ…ط§ظٹط© ط§ظ„ظ…طھط³ظˆظ‚طŒ ظ„ط¶ظ…ط§ظ† ط§ط³طھظ„ط§ظ… ط·ظ„ط¨ظٹطھظƒ ط¨ظ†ظپط³ ط§ظ„ط¬ظˆط¯ط© ظˆط§ظ„ظ…ظˆط§طµظپط§طھ ط§ظ„ظ…ط¹ط±ظˆط¶ط©.
+              جميع المتاجر والطلبات داخل منصة MIX مشمولة بضمان MIX الموحد وحماية المتسوق، لضمان استلام طلبيتك بنفس الجودة والمواصفات المعروضة.
             </div>
           </div>
         )}
@@ -2347,7 +2342,7 @@ export default function StoreView({
                     />
                     {selectedProduct.isOffer && (
                       <span className="absolute top-4 right-4 bg-red-600 text-white font-black text-xs px-3 py-1 rounded-full animate-bounce">
-                        {selectedProduct.offerText || 'ط®طµظ… ظ…ظ…ظٹط²'}
+                        {selectedProduct.offerText || 'خصم مميز'}
                       </span>
                     )}
                     <button 
@@ -2390,7 +2385,7 @@ export default function StoreView({
                       <h3 className="text-xl md:text-2xl font-black text-white mt-3 leading-tight">
                         {selectedProduct.name}
                       </h3>
-                      <p className="text-xs text-amber-500/80 font-bold mt-1">ط¨ط§ط¦ط¹ ظ…ط¹طھظ…ط¯: {store.name}</p>
+                      <p className="text-xs text-amber-500/80 font-bold mt-1">بائع معتمد: {store.name}</p>
                     </div>
 
                     <p className="text-zinc-400 text-xs leading-relaxed max-h-[140px] overflow-y-auto">
@@ -2399,16 +2394,16 @@ export default function StoreView({
 
                     <div className="border-t border-b border-zinc-900 py-3 flex justify-between items-center text-xs">
                       <div className="flex items-center gap-1.5 text-zinc-400">
-                        <span>ط§ظ„طھظ‚ظٹظٹظ…:</span>
+                        <span>التقييم:</span>
                         <span className="text-amber-400 font-bold flex items-center gap-0.5">
                           <Star size={12} fill="currentColor" />
                           {selectedProduct.rating || 5.0}
                         </span>
                       </div>
                       <div className="text-zinc-400">
-                        <span>ط§ظ„ظ…ط®ط²ظˆظ† ط§ظ„ظ…طھط§ط­:</span>
+                        <span>المخزون المتاح:</span>
                         <span className={`font-bold mr-1 ${selectedProduct.stock > 5 ? 'text-green-400' : 'text-red-400'}`}>
-                          {selectedProduct.stock > 0 ? `${selectedProduct.stock} ظˆط­ط¯ط©` : 'ظ†ظپط°طھ ط§ظ„ظƒظ…ظٹط©'}
+                          {selectedProduct.stock > 0 ? `${selectedProduct.stock} وحدة` : 'نفذت الكمية'}
                         </span>
                       </div>
                     </div>
@@ -2417,7 +2412,7 @@ export default function StoreView({
                   <div className="mt-6 pt-4 border-t border-zinc-900/80 space-y-4">
                     <div className="flex justify-between items-end">
                       <div>
-                        <span className="text-zinc-500 text-[10px] block font-semibold">ط§ظ„ط³ط¹ط± ط§ظ„ط¥ط¬ظ…ط§ظ„ظٹ ط´ط§ظ…ظ„ ط§ظ„ط¶ط±ظٹط¨ط©</span>
+                        <span className="text-zinc-500 text-[10px] block font-semibold">السعر الإجمالي شامل الضريبة</span>
                         <span className="text-white text-2xl font-extrabold font-mono">{selectedProduct.price} {currencySymbol}</span>
                         {selectedProduct.originalPrice && (
                           <span className="text-zinc-600 text-xs line-through mr-2 font-mono block">
@@ -2427,7 +2422,7 @@ export default function StoreView({
                       </div>
 
                       <div className="text-[10px] text-zinc-500 flex items-center gap-1">
-                        <span>ًںڑڑ طھظˆطµظٹظ„ ظ…ط¬ط§ظ†ظٹ ظˆط³ط±ظٹط¹</span>
+                        <span>🚚 توصيل مجاني وسريع</span>
                       </div>
                     </div>
 
@@ -2443,7 +2438,7 @@ export default function StoreView({
                         className="px-4 py-3 bg-zinc-900 hover:bg-zinc-850 disabled:bg-zinc-950 disabled:text-zinc-700 text-zinc-300 font-bold text-xs rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 border border-zinc-800"
                       >
                         <ShoppingBag size={14} />
-                        <span>ط¥ط¶ط§ظپط© ظ„ظ„ط³ظ„ط©</span>
+                        <span>إضافة للسلة</span>
                       </button>
 
                       {/* Prominent Quick Checkout Button */}
@@ -2457,7 +2452,7 @@ export default function StoreView({
                         className="px-4 py-3 bg-amber-500 hover:bg-amber-400 text-black font-black text-xs rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-[0_4px_20px_rgba(245,158,11,0.2)]"
                       >
                         <Sparkle size={14} className="animate-pulse" />
-                        <span>ط·ظ„ط¨ ط³ط±ظٹط¹ ظˆظ…ط¨ط§ط´ط± âڑ،</span>
+                        <span>طلب سريع ومباشر âڑ،</span>
                       </button>
                     </div>
                   </div>
@@ -2501,11 +2496,11 @@ export default function StoreView({
                   <div className="flex justify-between items-start border-b border-zinc-900 pb-4">
                     <div className="space-y-1">
                       <h3 className="text-lg font-black text-white flex items-center gap-2">
-                        <span className="p-1.5 bg-amber-500/10 text-amber-400 rounded-lg">ًں“‹</span>
-                        <span>ظ†ظ…ظˆط°ط¬ طھط¹ط¨ط¦ط© ط¨ظٹط§ظ†ط§طھ ط§ظ„ط´ط­ظ† ظˆط§ظ„ط¯ظپط¹ ط§ظ„ط³ط±ظٹط¹</span>
+                        <span className="p-1.5 bg-amber-500/10 text-amber-400 rounded-lg">📋</span>
+                        <span>نموذج تعبئة بيانات الشحن والدفع السريع</span>
                       </h3>
                       <p className="text-xs text-zinc-400">
-                        ظ‚ظ… ط¨طھط¹ط¨ط¦ط© ط¨ظٹط§ظ†ط§طھظƒ ظ„طھط£ظƒظٹط¯ ط´ط±ط§ط، ظ…ظ†طھط¬ <strong className="text-amber-400">"{checkoutProduct.name}"</strong> ظپظˆط±ط§ظ‹ ظ…ظ† ظ…طھط¬ط± <strong className="text-zinc-200">"{store.name}"</strong>.
+                        قم بتعبئة بياناتك لتأكيد شراء منتج <strong className="text-amber-400">"{checkoutProduct.name}"</strong> فوراً من متجر <strong className="text-zinc-200">"{store.name}"</strong>.
                       </p>
                     </div>
                     <button 
@@ -2525,7 +2520,7 @@ export default function StoreView({
                       <span className="text-white text-xs font-bold block truncate mt-0.5">{checkoutProduct.name}</span>
                     </div>
                     <div className="text-left shrink-0">
-                      <span className="text-[10px] text-zinc-500 block">ط³ط¹ط± ط§ظ„ظ…ظ†طھط¬</span>
+                      <span className="text-[10px] text-zinc-500 block">سعر المنتج</span>
                       <span className="text-amber-400 text-xs font-extrabold font-mono">{checkoutProduct.price} {currencySymbol}</span>
                     </div>
                   </div>
@@ -2730,15 +2725,15 @@ export default function StoreView({
                   {/* Pricing break down */}
                   <div className="p-4 bg-zinc-900/20 rounded-2xl border border-zinc-850 text-xs space-y-2">
                     <div className="flex justify-between text-zinc-400">
-                      <span>ط³ط¹ط± ط§ظ„ظ…ظ†طھط¬:</span>
+                      <span>سعر المنتج:</span>
                       <span className="font-mono">{checkoutProduct.price} {currencySymbol}</span>
                     </div>
                     <div className="flex justify-between text-zinc-400">
-                      <span>طھظƒظ„ظپط© ط§ظ„طھظˆطµظٹظ„ ط§ظ„ظ…ظˆط­ط¯ط© ظ„ظ€ MIX:</span>
+                      <span>تكلفة التوصيل الموحدة لـ MIX:</span>
                       <span className="font-mono">15 {currencySymbol}</span>
                     </div>
                     <div className="flex justify-between text-white font-bold pt-2 border-t border-zinc-900">
-                      <span>ط§ظ„ط¥ط¬ظ…ط§ظ„ظٹ ط§ظ„ظƒظ„ظٹ:</span>
+                      <span>الإجمالي الكلي:</span>
                       <span className="text-amber-400 font-mono text-sm">{checkoutProduct.price + 15} {currencySymbol}</span>
                     </div>
                   </div>
@@ -2750,14 +2745,14 @@ export default function StoreView({
                       onClick={() => setCheckoutProduct(null)}
                       className="flex-1 py-3 bg-zinc-900 hover:bg-zinc-850 text-zinc-400 font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
                     >
-                      ط¥ظ„ط؛ط§ط،
+                      إلغاء
                     </button>
                     <button
                       type="submit"
                       className="flex-2 py-3 bg-amber-500 hover:bg-amber-400 text-black font-black text-xs rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-[0_4px_20px_rgba(245,158,11,0.2)]"
                     >
                       <Check size={14} />
-                      <span>طھط£ظƒظٹط¯ ظˆط¥ط±ط³ط§ظ„ ط§ظ„ط·ظ„ط¨ ظپظˆط±ط§ظ‹ ًںڑ€</span>
+                      <span>تأكيد وإرسال الطلب فوراً 🚀</span>
                     </button>
                   </div>
 
@@ -2770,48 +2765,48 @@ export default function StoreView({
                   </div>
 
                   <div className="space-y-2">
-                    <h3 className="text-xl font-black text-white">طھظ… ط¥ط±ط³ط§ظ„ ط·ظ„ط¨ظٹطھظƒ ط¨ظ†ط¬ط§ط­! ًںژ‰ًں›’</h3>
+                    <h3 className="text-xl font-black text-white">تم إرسال طلبيتك بنجاح! 🎉🛒</h3>
                     <p className="text-xs text-zinc-400 max-w-sm mx-auto leading-relaxed">
-                      ط´ظƒط±ط§ظ‹ ظ„ط«ظ‚طھظƒ ط¨ظ…طھط¬ط± <strong className="text-amber-400">"{store.name}"</strong> ظˆظ…ط¬طھظ…ط¹ <strong className="text-white">MIX</strong>. ظ„ظ‚ط¯ طھظ… طھط³ط¬ظٹظ„ ط·ظ„ط¨ظƒ ط¨ظ†ط¬ط§ط­ ظپظٹ ظ„ظˆط­ط© ط§ظ„طھط­ظƒظ… ظˆطھظ†ط¨ظٹظ‡ ط§ظ„طھط§ط¬ط± ظ„طھط¬ظ‡ظٹط²ظ‡ ظپظˆط±ط§ظ‹.
+                      شكراً لثقتك بمتجر <strong className="text-amber-400">"{store.name}"</strong> ومجتمع <strong className="text-white">MIX</strong>. لقد تم تسجيل طلبك بنجاح في لوحة التحكم وتنبيه التاجر لتجهيزه فوراً.
                     </p>
                   </div>
 
                   <div className="p-4 bg-zinc-900/60 rounded-2xl border border-zinc-800 text-xs text-right space-y-2.5 max-w-sm mx-auto">
                     <div className="flex justify-between border-b border-zinc-800 pb-2">
-                      <span className="text-zinc-500 font-bold">ط±ظ‚ظ… ط§ظ„ط·ظ„ط¨ ط§ظ„ظپط±ظٹط¯:</span>
+                      <span className="text-zinc-500 font-bold">رقم الطلب الفريد:</span>
                       <span className="font-mono text-amber-400 font-black tracking-wider">{placedOrderId}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-zinc-500">ط§ظ„ظ…ظ†طھط¬ ط§ظ„ظ…ط·ظ„ظˆط¨:</span>
+                      <span className="text-zinc-500">المنتج المطلوب:</span>
                       <span className="text-white font-semibold">{checkoutProduct.name}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-zinc-500">ط·ط±ظٹظ‚ط© ط§ظ„ط¯ظپط¹ ط§ظ„ظ…ط®طھط§ط±ط©:</span>
+                      <span className="text-zinc-500">طريقة الدفع المختارة:</span>
                       <span className="text-white font-semibold">
-                        {selectedPaymentGateway === 'vodafoneCash' ? 'ظپظˆط¯ط§ظپظˆظ† ظƒط§ط´ ًں“±' : 'ط§ظ„ط¯ظپط¹ ط¹ظ†ط¯ ط§ظ„ط§ط³طھظ„ط§ظ… ظƒط§ط´ ًں“¦'}
+                        {selectedPaymentGateway === 'vodafoneCash' ? 'فودافون كاش 📱' : 'الدفع عند الاستلام كاش 📦'}
                       </span>
                     </div>
                     {selectedPaymentGateway === 'vodafoneCash' && (
                       <div className="flex justify-between">
-                        <span className="text-zinc-500">ط§ظ„ط±ظ‚ظ… ط§ظ„ظ…ط­ظˆظ„ ظ…ظ†ظ‡:</span>
+                        <span className="text-zinc-500">الرقم المحول منه:</span>
                         <span className="text-white font-mono">{vodafoneSenderNumber}</span>
                       </div>
                     )}
                     <div className="flex justify-between pt-2 border-t border-zinc-800 font-bold">
-                      <span className="text-zinc-400">ط§ظ„ظ…ط¨ظ„ط؛ ط§ظ„ظ…ط¯ظپظˆط¹:</span>
+                      <span className="text-zinc-400">المبلغ المدفوع:</span>
                       <span className="text-green-400 font-mono text-sm">{checkoutProduct.price + 15} {currencySymbol}</span>
                     </div>
                   </div>
 
                   <div className="bg-amber-500/5 border border-amber-500/10 p-3.5 rounded-xl text-[10px] text-zinc-500 max-w-sm mx-auto leading-relaxed">
-                    ًں“Œ ط³ظˆظپ ظٹظ‚ظˆظ… ط§ظ„طھط§ط¬ط± ط¨ط§ظ„طھظˆط§طµظ„ ظ…ط¹ظƒ ظ‡ط§طھظپظٹط§ظ‹ ط¹ظ„ظ‰ ط±ظ‚ظ… <strong className="text-zinc-300 font-mono">{checkoutPhone}</strong> ظ„طھط£ظƒظٹط¯ ظ…ظˆط¹ط¯ ط§ظ„ط´ط­ظ† ظˆط§ظ„طھط³ظ„ظٹظ….
+                    📌 سوف يقوم التاجر بالتواصل معك هاتفياً على رقم <strong className="text-zinc-300 font-mono">{checkoutPhone}</strong> لتأكيد موعد الشحن والتسليم.
                   </div>
 
                   <button
                     onClick={() => setCheckoutProduct(null)}
                     className="px-8 py-2.5 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs rounded-xl cursor-pointer transition-all"
                   >
-                    ط§ظ„ط¹ظˆط¯ط© ظ„ظ„طھطµظپط­ ظˆط§ظ„ط§ط³طھظ…طھط§ط¹
+                    العودة للتصفح والاستمتاع
                   </button>
                 </div>
               )}
@@ -2842,7 +2837,7 @@ export default function StoreView({
               <div className="flex justify-between items-center border-b border-zinc-900 pb-4 mb-4">
                 <h3 className="text-base font-black flex items-center gap-2">
                   <Heart className="text-pink-500 animate-pulse" fill="#ec4899" size={18} />
-                  <span>ط§ظ„ظ…ظ†طھط¬ط§طھ ط§ظ„ظ…ظپط¶ظ„ط© ظ„ط¯ظٹظƒ</span>
+                  <span>المنتجات المفضلة لديك</span>
                 </h3>
                 <button 
                   onClick={() => setShowFavsModal(false)}
@@ -2855,7 +2850,7 @@ export default function StoreView({
               {favorites.length === 0 ? (
                 <div className="text-center py-12 space-y-3">
                   <span className="text-4xl block">â‌¤ï¸ڈ</span>
-                  <p className="text-zinc-500 text-xs">ظ‚ط§ط¦ظ…ط© ط§ظ„ظ…ظپط¶ظ„ط© ظپط§ط±ط؛ط© ط­ط§ظ„ظٹط§ظ‹. طھطµظپط­ ط§ظ„ظ…طھط¬ط± ظˆط£ط¶ظپ ظ…ظ†طھط¬ط§طھظƒ ط§ظ„ظ…ظپط¶ظ„ط© ظ‡ظ†ط§!</p>
+                  <p className="text-zinc-500 text-xs">قائمة المفضلة فارغة حالياً. تصفح المتجر وأضف منتجاتك المفضلة هنا!</p>
                 </div>
               ) : (
                 <div className="space-y-3 max-h-[350px] overflow-y-auto pr-1">
@@ -2877,13 +2872,13 @@ export default function StoreView({
                           className="px-2.5 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-bold text-[10px] rounded-lg transition-all cursor-pointer flex items-center gap-1"
                         >
                           <ShoppingBag size={10} />
-                          <span>ط´ط±ط§ط، ط³ط±ظٹط¹</span>
+                          <span>شراء سريع</span>
                         </button>
                         <button
                           onClick={() => toggleFavorite(prod.id)}
                           className="px-2.5 py-1.5 bg-zinc-950 hover:bg-zinc-900 text-zinc-500 hover:text-red-400 font-bold text-[10px] rounded-lg transition-all cursor-pointer border border-zinc-855 text-center"
                         >
-                          ط­ط°ظپ
+                          حذف
                         </button>
                       </div>
                     </div>
@@ -2917,7 +2912,7 @@ export default function StoreView({
               <div className="flex justify-between items-center border-b border-zinc-900 pb-4 mb-4">
                 <h3 className="text-base font-black flex items-center gap-2">
                   <ShoppingBag className="text-cyan-400" size={18} />
-                  <span>ط¹ط±ط¨ط© ط§ظ„ظ…ط´طھط±ظٹط§طھ ط§ظ„ط®ط§طµط© ط¨ظƒ</span>
+                  <span>عربة المشتريات الخاصة بك</span>
                 </h3>
                 <button 
                   onClick={() => setShowCartModal(false)}
@@ -2929,8 +2924,8 @@ export default function StoreView({
 
               {cart.filter(item => item.storeId === store.id).length === 0 ? (
                 <div className="text-center py-12 space-y-3">
-                  <span className="text-4xl block">ًں›’</span>
-                  <p className="text-zinc-500 text-xs">ط³ظ„طھظƒ ظپط§ط±ط؛ط© ط­ط§ظ„ظٹط§ظ‹. طھطµظپط­ ط§ظ„ظ…طھط¬ط± ظˆط£ط¶ظپ ظ…ظ†طھط¬ط§طھظƒ ط§ظ„ظ…ظپط¶ظ„ط© ظ‡ظ†ط§ ظ„ط´ط±ط§ط¦ظ‡ط§!</p>
+                  <span className="text-4xl block">🛒</span>
+                  <p className="text-zinc-500 text-xs">سلتك فارغة حالياً. تصفح المتجر وأضف منتجاتك المفضلة هنا لشرائها!</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -2940,8 +2935,8 @@ export default function StoreView({
                         <img src={item.image} alt="" className="w-12 h-12 rounded-xl object-cover shrink-0 border border-zinc-800" />
                         <div className="flex-1 min-w-0">
                           <h4 className="text-xs font-bold text-white truncate">{item.productName}</h4>
-                          <span className="text-[10px] text-zinc-500 block mt-0.5">ط³ط¹ط± ط§ظ„ظˆط­ط¯ط©: {item.price} {currencySymbol}</span>
-                          <span className="text-xs text-cyan-400 font-bold block mt-1 font-mono">ط§ظ„ط¥ط¬ظ…ط§ظ„ظٹ: {item.price * item.quantity} {currencySymbol}</span>
+                          <span className="text-[10px] text-zinc-500 block mt-0.5">سعر الوحدة: {item.price} {currencySymbol}</span>
+                          <span className="text-xs text-cyan-400 font-bold block mt-1 font-mono">الإجمالي: {item.price * item.quantity} {currencySymbol}</span>
                         </div>
                         <div className="flex items-center gap-2 shrink-0 bg-zinc-950 p-1 rounded-lg border border-zinc-850">
                           <button
@@ -2971,15 +2966,15 @@ export default function StoreView({
                   {/* Pricing Breakdown */}
                   <div className="p-4 bg-zinc-900/20 rounded-2xl border border-zinc-850 text-xs space-y-2">
                     <div className="flex justify-between text-zinc-400">
-                      <span>ط¥ط¬ظ…ط§ظ„ظٹ ط§ظ„ظ…ظ†طھط¬ط§طھ:</span>
+                      <span>إجمالي المنتجات:</span>
                       <span className="font-mono">{cart.filter(item => item.storeId === store.id).reduce((acc, i) => acc + (i.price * i.quantity), 0)} {currencySymbol}</span>
                     </div>
                     <div className="flex justify-between text-zinc-400">
-                      <span>طھظƒظ„ظپط© ط§ظ„طھظˆطµظٹظ„ ط§ظ„ظ…ظˆط­ط¯ط© ظ„ظ€ MIX:</span>
+                      <span>تكلفة التوصيل الموحدة لـ MIX:</span>
                       <span className="font-mono">15 {currencySymbol}</span>
                     </div>
                     <div className="flex justify-between text-white font-bold pt-2 border-t border-zinc-900">
-                      <span>ط§ظ„ط¥ط¬ظ…ط§ظ„ظٹ ط§ظ„ظƒظ„ظٹ:</span>
+                      <span>الإجمالي الكلي:</span>
                       <span className="text-cyan-400 font-mono text-sm">
                         {cart.filter(item => item.storeId === store.id).reduce((acc, i) => acc + (i.price * i.quantity), 0) + 15} {currencySymbol}
                       </span>
@@ -2994,7 +2989,7 @@ export default function StoreView({
                     className="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-black text-xs rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-[0_4px_20px_rgba(6,182,212,0.2)]"
                   >
                     <Sparkle size={14} className="animate-pulse" />
-                    <span>طھط£ظƒظٹط¯ ظˆط´ط±ط§ط، ط§ظ„ط³ظ„ط© ظƒط§ظ…ظ„ط© âڑ،</span>
+                    <span>تأكيد وشراء السلة كاملة âڑ،</span>
                   </button>
                 </div>
               )}
@@ -3025,7 +3020,7 @@ export default function StoreView({
               <div className="flex justify-between items-center border-b border-zinc-900 pb-4 mb-4">
                 <h3 className="text-base font-black flex items-center gap-2">
                   <User className="text-purple-400" size={18} />
-                  <span>ط¨ظˆط§ط¨ط© ط§ظ„ط¹ظ…ظٹظ„ ط§ظ„ط±ظ‚ظ…ظٹط© ًں”گ</span>
+                  <span>بوابة العميل الرقمية 🔐</span>
                 </h3>
                 <button 
                   onClick={() => setShowAccountModal(false)}
@@ -3041,7 +3036,7 @@ export default function StoreView({
                   onSubmit={(e) => {
                     e.preventDefault();
                     if (!accountName.trim() || !accountPhone.trim()) {
-                      alert('ط§ظ„ط±ط¬ط§ط، ط¥ط¯ط®ط§ظ„ ط§ظ„ط§ط³ظ… ظˆط±ظ‚ظ… ط§ظ„ظ‡ط§طھظپ ظ„ظ„طھط³ط¬ظٹظ„');
+                      alert('الرجاء إدخال الاسم ورقم الهاتف للتسجيل');
                       return;
                     }
                     const newCust = {
@@ -3055,15 +3050,15 @@ export default function StoreView({
                   className="space-y-4"
                 >
                   <p className="text-[11px] text-zinc-400 leading-relaxed">
-                    ط³ط¬ظ„ ط¨ظٹط§ظ†ط§طھظƒ ط§ظ„ط´ط®طµظٹط© ظ„طھط³ظ‡ظٹظ„ ط¹ظ…ظ„ظٹط§طھ ط§ظ„ط¯ظپط¹ ط§ظ„طھظ„ظ‚ط§ط¦ظٹطŒ طھطھط¨ط¹ طھط§ط±ظٹط® طµظٹط§ظ†ط© ظ‡ط§طھظپظƒ ظˆط§ظ„ط·ظ„ط¨ط§طھ ظˆظ…طھط§ط¨ط¹ط© ط§ظ„طھط­ط¯ظٹط«ط§طھ ظ…ط¹ ط§ظ„طھط§ط¬ط±.
+                    سجل بياناتك الشخصية لتسهيل عمليات الدفع التلقائي، تتبع تاريخ صيانة هاتفك والطلبات ومتابعة التحديثات مع التاجر.
                   </p>
 
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-zinc-500 text-[10px] font-bold mb-1">ط§ظ„ط§ط³ظ… ط¨ط§ظ„ظƒط§ظ…ظ„ *</label>
+                      <label className="block text-zinc-500 text-[10px] font-bold mb-1">الاسم بالكامل *</label>
                       <input
                         type="text"
-                        placeholder="ط§ظƒطھط¨ ط§ط³ظ…ظƒ ط§ظ„ط«ظ„ط§ط«ظٹ"
+                        placeholder="اكتب اسمك الثلاثي"
                         value={accountName}
                         onChange={(e) => setAccountName(e.target.value)}
                         className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-purple-400 text-right font-sans"
@@ -3071,10 +3066,10 @@ export default function StoreView({
                       />
                     </div>
                     <div>
-                      <label className="block text-zinc-500 text-[10px] font-bold mb-1">ط±ظ‚ظ… ط§ظ„ظ‡ط§طھظپ / ط§ظ„ط¬ظˆط§ظ„ *</label>
+                      <label className="block text-zinc-500 text-[10px] font-bold mb-1">رقم الهاتف / الجوال *</label>
                       <input
                         type="tel"
-                        placeholder="ظ…ط«ط§ظ„: 0501234567"
+                        placeholder="مثال: 0501234567"
                         value={accountPhone}
                         onChange={(e) => setAccountPhone(e.target.value)}
                         className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-purple-400 text-left font-mono"
@@ -3082,7 +3077,7 @@ export default function StoreView({
                       />
                     </div>
                     <div>
-                      <label className="block text-zinc-500 text-[10px] font-semibold mb-1">ط§ظ„ط¨ط±ظٹط¯ ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ (ط§ط®طھظٹط§ط±ظٹ)</label>
+                      <label className="block text-zinc-500 text-[10px] font-semibold mb-1">البريد الإلكتروني (اختياري)</label>
                       <input
                         type="email"
                         placeholder="your-email@example.com"
@@ -3097,7 +3092,7 @@ export default function StoreView({
                     type="submit"
                     className="w-full py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-xl transition-all cursor-pointer shadow-[0_4px_20px_rgba(168,85,247,0.25)]"
                   >
-                    ط­ظپط¸ ظˆظ…طھط§ط¨ط¹ط© ط§ظ„ط­ط³ط§ط¨ ط§ظ„ط±ظ‚ظ…ظٹ
+                    حفظ ومتابعة الحساب الرقمي
                   </button>
                 </form>
               ) : (
@@ -3123,13 +3118,13 @@ export default function StoreView({
                       }}
                       className="text-[10px] text-red-400 hover:text-red-300 font-bold bg-red-950/10 px-2.5 py-1.5 rounded-lg border border-red-950/20 transition-all cursor-pointer"
                     >
-                      طھط³ط¬ظٹظ„ ط§ظ„ط®ط±ظˆط¬
+                      تسجيل الخروج
                     </button>
                   </div>
 
                   {/* Orders & Repair History Panels */}
                   <div className="space-y-3">
-                    <h4 className="text-[11px] font-black text-purple-400 tracking-wider">ط³ط¬ظ„ ط·ظ„ط¨ط§طھظƒ ط§ظ„ظپط¹ط§ظ„ط© ظˆطµظٹط§ظ†ط§طھظƒ ًں“±</h4>
+                    <h4 className="text-[11px] font-black text-purple-400 tracking-wider">سجل طلباتك الفعالة وصياناتك 📱</h4>
                     
                     <div className="space-y-2 max-h-[180px] overflow-y-auto pr-1">
                       {/* Query requests */}
@@ -3141,7 +3136,7 @@ export default function StoreView({
 
                         if (orders.length === 0 && repairs.length === 0) {
                           return (
-                            <p className="text-center py-6 text-zinc-600 text-[10px]">ظ„ط§ طھظˆط¬ط¯ ط·ظ„ط¨ط§طھ ط´ط±ط§ط، ط£ظˆ ط·ظ„ط¨ط§طھ طµظٹط§ظ†ط© ط³ط§ط¨ظ‚ط© ظ„ظƒ.</p>
+                            <p className="text-center py-6 text-zinc-600 text-[10px]">لا توجد طلبات شراء أو طلبات صيانة سابقة لك.</p>
                           );
                         }
 
@@ -3151,20 +3146,20 @@ export default function StoreView({
                               <div key={o.id} className="p-2.5 bg-zinc-950 rounded-xl border border-zinc-900 text-[10px] flex justify-between items-center">
                                 <div className="text-right space-y-0.5">
                                   <span className="text-[9px] text-amber-500 font-bold font-mono">{o.id}</span>
-                                  <p className="text-zinc-300 font-bold">ط·ظ„ط¨: {o.items[0]?.productName || 'ظ…ظ†طھط¬ط§طھ ظ…ط¬ظ…ط¹ط©'}</p>
+                                  <p className="text-zinc-300 font-bold">طلب: {o.items[0]?.productName || 'منتجات مجمعة'}</p>
                                   <span className="text-[8px] text-zinc-500 block">{o.date}</span>
                                 </div>
-                                <span className="px-2 py-0.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-full font-bold">ظ‚ظٹط¯ ط§ظ„ط§ظ†طھط¸ط§ط±</span>
+                                <span className="px-2 py-0.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-full font-bold">قيد الانتظار</span>
                               </div>
                             ))}
                             {repairs.map((r: any, idx: number) => (
                               <div key={idx} className="p-2.5 bg-zinc-950 rounded-xl border border-zinc-900 text-[10px] flex justify-between items-center">
                                 <div className="text-right space-y-0.5">
-                                  <span className="text-[9px] text-purple-400 font-bold block">ط·ظ„ط¨ طµظٹط§ظ†ط© ًں”§</span>
-                                  <p className="text-zinc-300 font-bold">ط¬ظ‡ط§ط² {r.device}</p>
+                                  <span className="text-[9px] text-purple-400 font-bold block">طلب صيانة 🔧</span>
+                                  <p className="text-zinc-300 font-bold">جهاز {r.device}</p>
                                   <span className="text-[8px] text-zinc-500 block">{r.problem}</span>
                                 </div>
-                                <span className="px-2 py-0.5 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-full font-bold">ظ…ط³طھظ„ظ…</span>
+                                <span className="px-2 py-0.5 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-full font-bold">مستلم</span>
                               </div>
                             ))}
                           </>
@@ -3183,7 +3178,7 @@ export default function StoreView({
       <button
         onClick={() => setShowChat(true)}
         className="fixed bottom-6 left-6 z-40 w-12 h-12 bg-amber-500 hover:bg-amber-400 text-black rounded-full shadow-lg shadow-amber-500/30 flex items-center justify-center transition-all hover:scale-110 cursor-pointer animate-bounce"
-        title="ط¯ط±ط¯ط´ط© ظ…ط¨ط§ط´ط±ط© ظ…ط¹ ط§ظ„طھط§ط¬ط±"
+        title="دردشة مباشرة مع التاجر"
       >
         <MessageSquarePlus size={22} />
       </button>
@@ -3192,7 +3187,7 @@ export default function StoreView({
       {(() => {
         const chatUser: UserType | null = customer ? {
           id: customer.phone || customer.email || 'store-customer',
-          name: customer.name || 'ط¹ظ…ظٹظ„',
+          name: customer.name || 'عميل',
           email: customer.email || '',
           password: '',
           role: 'customer'

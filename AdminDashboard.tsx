@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Shield, Users, Store, TrendingUp, Sliders, Settings, LogOut,
-  Plus, Trash2, Edit3, Check, X, Save, Palette, Layers, Info, 
-  Eye, FileText, CheckCircle, AlertTriangle, PlayCircle, Percent, ShoppingBag, 
-  Grid, MapPin, Truck, ShieldAlert, Key, Globe, Search, RefreshCw,
-  Bell, HelpCircle, ArrowUpRight, BarChart3, Activity, ListOrdered, Sparkles, Wrench, CreditCard
-} from 'lucide-react';
+import { Shield, Users, Store, TrendingUp, FileSliders as Sliders, Settings, LogOut, Plus, Trash2, CreditCard as Edit3, Check, X, Save, Palette, Layers, Info, Eye, FileText, CircleCheck as CheckCircle, TriangleAlert as AlertTriangle, CirclePlay as PlayCircle, Percent, ShoppingBag, Grid2x2 as Grid, MapPin, Truck, ShieldAlert, Key, Globe, Search, RefreshCw, Bell, Circle as HelpCircle, ArrowUpRight, ChartBar as BarChart3, Activity, ListOrdered, Sparkles, Wrench, CreditCard } from 'lucide-react';
 import { Store as StoreType, Product, Order, MIXBanner, User, Coupon, StoreTemplateConfig } from '../types';
 import { DEFAULT_PHONE_REPAIR_TEMPLATE, DEFAULT_STORE_TEMPLATES } from '../data/mockData';
 import { logSystemActivity, compressBase64 } from '../lib/firebase';
@@ -1989,7 +1983,7 @@ export default function AdminDashboard({ onLogout, onEnterStoreDashboard, onView
           <div className="space-y-6 animate-fadeIn">
             <div>
               <h2 className="text-lg font-black text-[#D4AF37]">محرر المنصة الشامل - هوية، ألوان، كود، قوائم، محتوى 🎨</h2>
-              <p className="text-xs text-white/40 mt-1">غيّر كل شيء في المنصة بدون برمجة: الشعار، الألوان، الخلفيات المتحركة، القوائم، الروابط، والمحتوى.</p>
+              <p className="text-xs text-white/40 mt-1">غيّر كل شيء في المنصة بدون برمجة: الشعار، الألوان، الخلفيات المتحركة، القوائم، الروابء والمحتوى.</p>
             </div>
 
             <form onSubmit={handleSaveSettings} className="space-y-6">
@@ -2381,7 +2375,7 @@ export default function AdminDashboard({ onLogout, onEnterStoreDashboard, onView
           <div className="space-y-6 animate-fadeIn">
             <div>
               <h2 className="text-lg font-black text-[#D4AF37]">قوالب المتاجر القابلة للتعديل 🎨</h2>
-              <p className="text-xs text-white/40 mt-1">تعديل الألوان، الخطوط، الإنيميشن، التخطيط، العناوين، خدمات الصيانة والمميزات لكل قالب. أي تاجر يختار نوع المتجر يحصل على القالب تلقائياً.</p>
+              <p className="text-xs text-white/40 mt-1">تعديل الألوان، الخطوء الإنيميشن، التخطيء العناوين، خدمات الصيانة والمميزات لكل قالب. أي تاجر يختار نوع المتجر يحصل على القالب تلقائياً.</p>
             </div>
 
             {/* Templates Grid */}
