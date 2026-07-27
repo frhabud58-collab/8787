@@ -1,0 +1,236 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@300;400;500;700;900&family=Almarai:wght@300;400;700;800&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Changa:wght@300;400;500;600;700;800&family=Alexandria:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+/* dvh fallback for browsers that don't support it */
+.h-dvh {
+  height: 100vh;
+  height: 100dvh;
+}
+
+@theme {
+  --font-sans: "Cairo", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", "Cairo", serif;
+  --font-display: "Space Grotesk", "Cairo", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-brand-bg: #0B0B0B;
+  --color-brand-sec: #121212;
+  --color-brand-gold: #D4A63D;
+  --color-brand-gold-light: #E5BC55;
+  --color-brand-gold-dark: #A87C22;
+  --color-brand-border: #2B2B2B;
+  --color-brand-text-light: #F0F0F0;
+  --color-brand-text-muted: #A0A0A0;
+}
+
+/* Better text readability on dark backgrounds */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* White text helper */
+.text-pure-white { color: #FFFFFF; }
+.text-soft-white { color: #F0F0F0; }
+.text-muted { color: #A0A0A0; }
+
+/* Custom scrollbar styling for a luxurious dark aesthetic */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1a1a1a;
+  border-radius: 9999px;
+  border: 1px solid rgba(212, 166, 61, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #D4A63D;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(18, 18, 18, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 166, 61, 0.12);
+}
+
+.editorial-glow-gold {
+  background: radial-gradient(circle, rgba(212, 166, 61, 0.08) 0%, rgba(11, 11, 11, 0) 75%);
+}
+
+.editorial-glow-white {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, rgba(11, 11, 11, 0) 70%);
+}
+
+.border-editorial {
+  border-color: rgba(212, 166, 61, 0.3);
+}
+
+.text-editorial-gold {
+  color: #D4A63D;
+}
+
+.bg-editorial-gold {
+  background-color: #D4A63D;
+}
+
+.hover-bg-editorial-gold:hover {
+  background-color: #A87C22;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom live styling overrides for merchant stores */
+.store-custom-root .rounded-3xl,
+.store-custom-root .rounded-2xl,
+.store-custom-root .rounded-xl,
+.store-custom-root .rounded-lg,
+.store-custom-root .rounded-md {
+  border-radius: var(--store-radius) !important;
+}
+
+.store-custom-root .shadow,
+.store-custom-root .shadow-md,
+.store-custom-root .shadow-lg,
+.store-custom-root .shadow-2xl,
+.store-custom-root .shadow-xl {
+  box-shadow: var(--store-shadow) !important;
+}
+
+/* Skeleton loading animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+/* Prevent horizontal scroll globally */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Ensure all images are responsive */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Smooth touch interactions for mobile */
+@media (hover: none) and (pointer: coarse) {
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .hover\:scale-105:hover {
+    transform: none !important;
+  }
+}
+
+/* Hide scrollbar for horizontal tabs */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Splash screen animation */
+@keyframes splashFadeIn {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes splashPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 166, 61, 0.4); }
+  50% { transform: scale(1.05); box-shadow: 0 0 30px 10px rgba(212, 166, 61, 0.2); }
+}
+
+.animate-splash-fadeIn {
+  animation: splashFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.animate-splash-pulse {
+  animation: splashPulse 2s ease-in-out infinite;
+}
+
+/* Smooth bottom bar transitions */
+@keyframes barSlideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-bar-slide-up {
+  animation: barSlideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Tab switch animation */
+@keyframes tabFade {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-tab-fade {
+  animation: tabFade 0.2s ease-out forwards;
+}
+
+/* Page transition */
+@keyframes pageSlideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-page-slide {
+  animation: pageSlideIn 0.3s ease-out forwards;
+}
+@keyframes splashPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 166, 61, 0.4); }
+  50% { transform: scale(1.05); box-shadow: 0 0 30px 10px rgba(212, 166, 61, 0.2); }
+}
+@keyframes splashShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-splash-fadeIn {
+  animation: splashFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.animate-splash-pulse {
+  animation: splashPulse 2s ease-in-out infinite;
+}
+
+/* Swipe animation for chat messages */
+@keyframes slideInRight {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideInLeft {
+  from { transform: translateX(-30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.chat-slide-right {
+  animation: slideInRight 0.3s ease-out forwards;
+}
+.chat-slide-left {
+  animation: slideInLeft 0.3s ease-out forwards;
+}
+
+

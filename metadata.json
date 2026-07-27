@@ -1,0 +1,8 @@
+{
+  "name": "Remix: MIX",
+  "description": "منصة سنتر إلكتروني فاخرة (Digital Mall) تجمع آلاف المحلات والمتاجر المستقلة تحت سقف واحد لتصفح المنتجات والعروض والتسوق بسهولة.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

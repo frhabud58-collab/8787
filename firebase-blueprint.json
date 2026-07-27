@@ -1,0 +1,26 @@
+{
+  "entities": {
+    "SystemState": {
+      "title": "SystemState",
+      "description": "Unified state structure for storing and syncing local storage data with Firestore",
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "description": "Array of entity elements or a state object representing the table's payload"
+        },
+        "updatedAt": {
+          "type": "number",
+          "description": "The UNIX timestamp of the last update"
+        }
+      },
+      "required": ["data", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/system_state/{key}": {
+      "schema": "SystemState",
+      "description": "Collection storing synchronized tables of the MIX ecommerce and platform system"
+    }
+  }
+}

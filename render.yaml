@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: mix-api-atbawi
+    runtime: node
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: DB_NAME
+        value: mix_atbawi
+      - key: PORT
+        value: 3001
