@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D4A63D"/>
+      <stop offset="100%" style="stop-color:#A87C22"/>
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="32" fill="#0B0B0B"/>
+  <text x="96" y="110" font-family="Cairo, sans-serif" font-size="80" font-weight="900" fill="url(#g)" text-anchor="middle">MIX</text>
+  <text x="96" y="145" font-family="Cairo, sans-serif" font-size="14" font-weight="700" fill="#D4A63D" text-anchor="middle" opacity="0.8">●</text>
+</svg>

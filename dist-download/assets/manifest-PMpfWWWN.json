@@ -1,0 +1,30 @@
+{
+  "name": "MIX - السنتر الإلكتروني الموحد",
+  "short_name": "MIX",
+  "description": "السنتر الموحد الأول لتمكين التجار وصيانة الأجهزة الذكية وتسوق المنتجات الفاخرة",
+  "start_url": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#0B0B0B",
+  "theme_color": "#0B0B0B",
+  "orientation": "portrait-primary",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/icons/icon-192.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "categories": ["shopping", "business"],
+  "prefer_related_applications": false
+}
