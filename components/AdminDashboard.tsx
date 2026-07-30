@@ -1055,7 +1055,7 @@ export default function AdminDashboard({ onLogout, onEnterStoreDashboard, onView
                               const approvedUserData = storedUsers.find((u: any) => u.id === merchantUserId);
                               if (approvedUserData) fbSync.saveUser(approvedUserData).catch(console.error);
 
-                              // Create store
+                              // Create store — includes ALL fields StoreView expects to prevent render errors
                               const storeSlug = req.storeName.replace(/\s+/g, '-').replace(/[^\u0600-\u06FF\w-]/g, '').toLowerCase();
                               const newStore = {
                                 id: newStoreId,
@@ -1075,16 +1075,42 @@ export default function AdminDashboard({ onLogout, onEnterStoreDashboard, onView
                                 rating: 5.0,
                                 reviewsCount: 0,
                                 productsCount: 0,
-                                themeColor: { primary: '#D4AF37', secondary: '#111111', background: '#050505' },
-                                layoutType: 'luxury',
+                                themeColor: { primary: '#D4AF37', secondary: '#111111', background: '#050505', frameColor: '#141414', textColor: '#d4d4d8' },
+                                layoutType: 'luxury' as const,
                                 visualTemplate: req.visualTemplate || 'multicategory',
-                                banners: [],
+                                banners: [{
+                                  id: `b-${Date.now()}`,
+                                  title: `مرحباً بكم في ${req.storeName}`,
+                                  subtitle: 'عروض حصرية وخصومات مميزة بانتظاركم',
+                                  image: req.storeCover || 'https://images.unsplash.com/photo-1468436139062-f60a71c5c892?q=80&w=1200&h=400&fit=crop',
+                                  linkToCategory: ''
+                                }],
                                 categories: [req.storeCategory, 'وصل حديثاً'],
                                 featured: false,
                                 status: 'active',
                                 ownerId: merchantUserId,
                                 commissionRate: req.commissionRate || 3,
-                                salesCount: 0
+                                salesCount: 0,
+                                currency: 'ر.س',
+                                features: [
+                                  { id: '1', title: 'توصيل سريع', desc: 'توصيل لباب بيتك في أسرع وقت ممكن', icon: '⚡' },
+                                  { id: '2', title: 'ضمان MIX للثقة', desc: 'جميع المنتجات مكفولة بضمان MIX المعتمد', icon: '🛡️' },
+                                  { id: '3', title: 'دعم مباشر', desc: 'دعم متواصل على مدار اليوم لحل أي إشكاليات', icon: '💬' }
+                                ],
+                                paymentGateways: [
+                                  { id: `pg-cod-${Date.now()}`, type: 'cod' as const, name: 'الدفع عند الاستلام', enabled: true, icon: '💵', minAmount: 50, maxAmount: 10000 },
+                                  { id: `pg-vodafone-${Date.now()}`, type: 'vodafoneCash' as const, name: 'فودافون كاش', enabled: true, icon: '🟥', number: '', accountHolderName: '', extraInstructions: 'يرجى إرسال صورة الإيصال بعد التحويل' },
+                                  { id: `pg-instapay-${Date.now()}`, type: 'instapay' as const, name: 'إنستا باي (InstaPay)', enabled: true, icon: '💙', number: '', accountHolderName: '', extraInstructions: 'تحويل فوري عبر تطبيق InstaPay' },
+                                  { id: `pg-bank-${Date.now()}`, type: 'bankTransfer' as const, name: 'تحويل بنكي', enabled: true, icon: '🏦', bankName: '', accountHolderName: '', iban: '', branchName: '', number: '', extraInstructions: 'يرجى إرسال صورة إيصال التحويل' }
+                                ],
+                                customCheckoutFields: [
+                                  { id: `f-name-${Date.now()}`, name: 'fullName', label: 'الاسم الكامل', type: 'text' as const, required: true, enabled: true, placeholder: 'أدخل اسمك الكامل', order: 1 },
+                                  { id: `f-phone-${Date.now()}`, name: 'phone', label: 'رقم الهاتف', type: 'tel' as const, required: true, enabled: true, placeholder: 'مثال: 01xxxxxxxxx', order: 2, validation: { minLength: 10, maxLength: 15, pattern: '^[0-9+\\- ]+$' } },
+                                  { id: `f-address-${Date.now()}`, name: 'address', label: 'عنوان التوصيل', type: 'textarea' as const, required: true, enabled: true, placeholder: 'المحافظة، الحي، الشارع، رقم العقار، الدور، رقم الشقة', order: 3 },
+                                  { id: `f-gov-${Date.now()}`, name: 'governorate', label: 'المحافظة', type: 'select' as const, required: true, enabled: true, options: ['القاهرة', 'الجيزة', 'الإسكندرية', 'الدقهلية', 'البحيرة', 'الشرقية', 'القليوبية', 'المنوفية', 'الغربية', 'كفر الشيخ', 'دمياط', 'بورسعيد', 'الإسماعيلية', 'السويس', 'الأقصر', 'أسوان', 'سوهاج', 'قنا', 'أسيوط', 'المنيا', 'الفيوم', 'بني سويف', 'الوادي الجديد', 'مطروح', 'شمال سيناء', 'جنوب سيناء', 'البحر الأحمر'], order: 4 },
+                                  { id: `f-email-${Date.now()}`, name: 'email', label: 'البريد الإلكتروني', type: 'email' as const, required: false, enabled: true, placeholder: 'example@email.com', order: 5 },
+                                  { id: `f-notes-${Date.now()}`, name: 'notes', label: 'ملاحظات إضافية', type: 'textarea' as const, required: false, enabled: true, placeholder: 'أي تعليمات خاصة للطلب (اختياري)', order: 6 }
+                                ]
                               };
                               const currentStores = JSON.parse(localStorage.getItem('mix_stores') || '[]');
                               currentStores.push(newStore);

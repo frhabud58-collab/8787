@@ -156,7 +156,27 @@ export default function StoreView({
   // Live store data from localStorage (polling) so merchant edits appear immediately
   const [liveStore, setLiveStore] = useState(initialStore);
   const [liveProducts, setLiveProducts] = useState(products);
-  const store = liveStore;
+  // Normalize store to ensure all fields StoreView expects are present (prevents crashes on new stores)
+  const store: Store = {
+    ...liveStore,
+    themeColor: {
+      primary: liveStore.themeColor?.primary || '#D4AF37',
+      secondary: liveStore.themeColor?.secondary || '#111111',
+      background: liveStore.themeColor?.background || '#050505',
+      frameColor: liveStore.themeColor?.frameColor || '#141414',
+      textColor: liveStore.themeColor?.textColor || '#d4d4d8',
+    },
+    banners: Array.isArray(liveStore.banners) ? liveStore.banners : [],
+    categories: Array.isArray(liveStore.categories) ? liveStore.categories : ['الكل'],
+    features: Array.isArray(liveStore.features) ? liveStore.features : [],
+    repairServices: Array.isArray(liveStore.repairServices) ? liveStore.repairServices : [],
+    paymentGateways: Array.isArray(liveStore.paymentGateways) ? liveStore.paymentGateways : [],
+    customCheckoutFields: Array.isArray(liveStore.customCheckoutFields) ? liveStore.customCheckoutFields : [],
+    sectionsOrder: Array.isArray(liveStore.sectionsOrder) ? liveStore.sectionsOrder : ['banner', 'categories', 'products', 'about'],
+    currency: liveStore.currency || (i18n.language === 'en' ? 'EGP' : 'جنيه'),
+    layoutType: liveStore.layoutType || 'luxury',
+    visualTemplate: liveStore.visualTemplate || 'multicategory',
+  };
   const currencySymbol = store.currency || (i18n.language === 'en' ? 'EGP' : 'جنيه');
 
   // Template config from AdminDashboard
