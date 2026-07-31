@@ -274,9 +274,9 @@ export default function AdminDashboard({ onLogout, onEnterStoreDashboard, onView
     saveLocal('mix_banners', updatedBanners);
 
     // Save to Firestore (real-time sync across devices)
+    fbSync.saveAllStores(updatedStores).catch(console.error);
     fbSync.saveAllProducts(updatedProducts).catch(console.error);
     fbSync.saveAllBanners(updatedBanners).catch(console.error);
-    updatedStores.forEach(s => fbSync.saveStore(s).catch(console.error));
 
     // Update local state
     setStores(updatedStores);

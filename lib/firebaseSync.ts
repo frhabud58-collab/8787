@@ -379,6 +379,13 @@ export const realtimeSync = {
     if (initDone) return;
     initDone = true;
     try {
+      // First check if Supabase stores table is empty
+      const { count: storeCount } = await supabase.from('stores').select('*', { count: 'exact', head: true });
+      if (storeCount === 0) {
+        // Supabase is empty — seed from localStorage initial data
+        await this.seedFromLocal();
+        return;
+      }
       const tables = Object.keys(TABLE_KEYS);
       await Promise.all(tables.map(async (table) => {
         const { data, error } = await supabase.from(table).select('*');
@@ -387,14 +394,69 @@ export const realtimeSync = {
           return;
         }
         if (data && data.length > 0) {
+          const key = TABLE_KEYS[table];
+          const localData = readLocal(key);
           const mapped = data.map((row: any) => mapRowToApp(table, row));
-          writeLocal(TABLE_KEYS[table], mapped);
+          if (mapped.length >= localData.length) {
+            writeLocal(key, mapped);
+          } else {
+            const supabaseIds = new Set(mapped.map((r: any) => r.id));
+            const localOnly = localData.filter((r: any) => !supabaseIds.has(r.id));
+            writeLocal(key, [...mapped, ...localOnly]);
+          }
         }
       }));
-      // Dispatch a global refresh event
       Object.values(TABLE_KEYS).forEach(dispatchChange);
     } catch (err) {
       console.warn('[sync] Init failed, using localStorage cache:', err);
+    }
+  },
+
+  async seedFromLocal(): Promise<void> {
+    try {
+      const stores = readLocal('mix_stores');
+      if (stores.length > 0) {
+        const rows = stores.map((s) => mapAppToRow('stores', s));
+        await supabase.from('stores').upsert(rows);
+      }
+      const products = readLocal('mix_products');
+      if (products.length > 0) {
+        const rows = products.map((p) => mapAppToRow('products', p));
+        await supabase.from('products').upsert(rows);
+      }
+      const banners = readLocal('mix_banners');
+      if (banners.length > 0) {
+        const rows = banners.map((b) => mapAppToRow('banners', b));
+        await supabase.from('banners').upsert(rows);
+      }
+      const reviews = readLocal('mix_reviews');
+      if (reviews.length > 0) {
+        const rows = reviews.map((r) => mapAppToRow('reviews', r));
+        await supabase.from('reviews').upsert(rows);
+      }
+      const coupons = readLocal('mix_coupons');
+      if (coupons.length > 0) {
+        const rows = coupons.map((c) => mapAppToRow('coupons', c));
+        await supabase.from('coupons').upsert(rows);
+      }
+      const orders = readLocal('mix_orders');
+      if (orders.length > 0) {
+        const rows = orders.map((o) => mapAppToRow('orders', o));
+        await supabase.from('orders').upsert(rows);
+      }
+      const users = readLocal('mix_users');
+      if (users.length > 0) {
+        const rows = users.map((u) => mapAppToRow('app_users', u));
+        await supabase.from('app_users').upsert(rows);
+      }
+      const requests = readLocal('mix_store_requests');
+      if (requests.length > 0) {
+        const rows = requests.map((r) => mapAppToRow('store_requests', r));
+        await supabase.from('store_requests').upsert(rows);
+      }
+      Object.values(TABLE_KEYS).forEach(dispatchChange);
+    } catch (err) {
+      console.warn('[sync] Seed failed:', err);
     }
   },
 
@@ -434,6 +496,15 @@ export const realtimeSync = {
   async saveAllStores(stores: any[]): Promise<void> {
     const rows = stores.map((s) => mapAppToRow('stores', s));
     await supabase.from('stores').upsert(rows);
+    // Delete stores that are no longer in the array
+    const keepIds = stores.map((s: any) => s.id);
+    const { data: allDb } = await supabase.from('stores').select('id');
+    if (allDb) {
+      const toDelete = allDb.map((r: any) => r.id).filter((id: string) => !keepIds.includes(id));
+      if (toDelete.length > 0) {
+        await supabase.from('stores').delete().in('id', toDelete);
+      }
+    }
     writeLocal('mix_stores', stores);
     dispatchChange('mix_stores');
   },
@@ -458,6 +529,15 @@ export const realtimeSync = {
   async saveAllProducts(products: any[]): Promise<void> {
     const rows = products.map((p) => mapAppToRow('products', p));
     await supabase.from('products').upsert(rows);
+    // Delete products that are no longer in the array
+    const keepIds = products.map((p: any) => p.id);
+    const { data: allDb } = await supabase.from('products').select('id');
+    if (allDb) {
+      const toDelete = allDb.map((r: any) => r.id).filter((id: string) => !keepIds.includes(id));
+      if (toDelete.length > 0) {
+        await supabase.from('products').delete().in('id', toDelete);
+      }
+    }
     writeLocal('mix_products', products);
     dispatchChange('mix_products');
   },
@@ -492,6 +572,15 @@ export const realtimeSync = {
   async saveAllBanners(banners: any[]): Promise<void> {
     const rows = banners.map((b) => mapAppToRow('banners', b));
     await supabase.from('banners').upsert(rows);
+    // Delete banners that are no longer in the array
+    const keepIds = banners.map((b: any) => b.id);
+    const { data: allDb } = await supabase.from('banners').select('id');
+    if (allDb) {
+      const toDelete = allDb.map((r: any) => r.id).filter((id: string) => !keepIds.includes(id));
+      if (toDelete.length > 0) {
+        await supabase.from('banners').delete().in('id', toDelete);
+      }
+    }
     writeLocal('mix_banners', banners);
     dispatchChange('mix_banners');
   },
@@ -564,13 +653,34 @@ export const realtimeSync = {
     dispatchChange('mix_platform_name');
   },
 
-  async resetAll(): Promise<void> {
+  async resetAll(seedData?: {
+    stores?: any[]; products?: any[]; banners?: any[];
+    coupons?: any[]; reviews?: any[]; orders?: any[]; categories?: any[];
+  }): Promise<void> {
+    // Clear all tables
     const tables = Object.keys(TABLE_KEYS);
     await Promise.all(tables.map((t) => supabase.from(t).delete().neq('id', '___never___')));
-    Object.values(TABLE_KEYS).forEach((key) => {
-      localStorage.removeItem(key);
-      dispatchChange(key);
-    });
+    // Re-seed with initial data if provided
+    if (seedData) {
+      if (seedData.stores?.length) await supabase.from('stores').upsert(seedData.stores.map((s) => mapAppToRow('stores', s)));
+      if (seedData.products?.length) await supabase.from('products').upsert(seedData.products.map((p) => mapAppToRow('products', p)));
+      if (seedData.banners?.length) await supabase.from('banners').upsert(seedData.banners.map((b) => mapAppToRow('banners', b)));
+      if (seedData.coupons?.length) await supabase.from('coupons').upsert(seedData.coupons.map((c) => mapAppToRow('coupons', c)));
+      if (seedData.reviews?.length) await supabase.from('reviews').upsert(seedData.reviews.map((r) => mapAppToRow('reviews', r)));
+      if (seedData.orders?.length) await supabase.from('orders').upsert(seedData.orders.map((o) => mapAppToRow('orders', o)));
+      // Update localStorage with seed data
+      if (seedData.stores) { writeLocal('mix_stores', seedData.stores); dispatchChange('mix_stores'); }
+      if (seedData.products) { writeLocal('mix_products', seedData.products); dispatchChange('mix_products'); }
+      if (seedData.banners) { writeLocal('mix_banners', seedData.banners); dispatchChange('mix_banners'); }
+      if (seedData.coupons) { writeLocal('mix_coupons', seedData.coupons); dispatchChange('mix_coupons'); }
+      if (seedData.reviews) { writeLocal('mix_reviews', seedData.reviews); dispatchChange('mix_reviews'); }
+      if (seedData.orders) { writeLocal('mix_orders', seedData.orders); dispatchChange('mix_orders'); }
+    } else {
+      Object.values(TABLE_KEYS).forEach((key) => {
+        localStorage.removeItem(key);
+        dispatchChange(key);
+      });
+    }
   },
 
   destroy(): void {

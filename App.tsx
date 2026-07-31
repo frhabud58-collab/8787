@@ -20,7 +20,6 @@ import {
 } from './data/mockData';
 
 import { fbSync, realtimeSync } from './lib/firebaseSync';
-import { supabase } from './lib/supabaseClient';
 // import { dbAPI } from './lib/dbAPI'; // disabled: legacy MongoDB layer, see init() comment below
 import { fixAllCorruptedData } from './utils/encodingFix';
 
@@ -43,29 +42,41 @@ import UserProfile from './components/UserProfile';
 import MerchantProfile from './components/MerchantProfile';
 import { useRealtimeToast } from './hooks/useRealtimeSync';
 
-// Inline row mapper for real-time subscription handlers (converts snake_case DB rows to camelCase app objects)
-function mapRowInline(table: string, row: any): any {
-  if (!row) return row;
-  const maps: Record<string, Record<string, string>> = {
-    stores: { theme_color: 'themeColor', layout_type: 'layoutType', visual_template: 'visualTemplate', reviews_count: 'reviewsCount', products_count: 'productsCount', owner_id: 'ownerId', commission_rate: 'commissionRate', sales_count: 'salesCount', repair_services: 'repairServices', sections_order: 'sectionsOrder', section_visibility: 'sectionVisibility', store_location: 'storeLocation', services_list: 'servicesList', payment_gateways: 'paymentGateways', custom_checkout_fields: 'customCheckoutFields', template_config: 'templateConfig', store_phone: 'storePhone', seo_description: 'seoDescription', seo_keywords: 'seoKeywords', business_type: 'businessType', phone_condition: 'phoneCondition', font_family: 'fontFamily', border_radius: 'borderRadius', shadow_type: 'shadowType' },
-    products: { store_id: 'storeId', original_price: 'originalPrice', sales_count: 'salesCount', is_offer: 'isOffer', offer_text: 'offerText', device_model: 'deviceModel' },
-    store_requests: { merchant_name: 'merchantName', merchant_email: 'merchantEmail', merchant_password: 'merchantPassword', store_name: 'storeName', store_category: 'storeCategory', store_description: 'storeDescription', store_city: 'storeCity', store_district: 'storeDistrict', store_neighborhood: 'storeNeighborhood', store_phone: 'storePhone', store_logo: 'storeLogo', store_cover: 'storeCover', visual_template: 'visualTemplate', commission_rate: 'commissionRate', approved_at: 'approvedAt', store_id: 'storeId', merchant_user_id: 'merchantUserId' },
-    app_users: { store_id: 'storeId' },
-    orders: { store_id: 'storeId', store_name: 'storeName', customer_name: 'customerName', customer_email: 'customerEmail', customer_phone: 'customerPhone', customer_address: 'customerAddress' },
-    reviews: { store_id: 'storeId', user_name: 'userName' },
-    banners: { video_url: 'videoUrl', link_type: 'linkType', link_value: 'linkValue', button_text: 'buttonText', button_link: 'buttonLink', is_global: 'isGlobal', force_all_stores: 'forceAllStores', store_id: 'storeId', sort_order: 'order' },
-    coupons: { store_id: 'storeId', discount_type: 'discountType', min_order_value: 'minOrderValue' },
-  };
-  const map = maps[table];
-  if (!map) return row;
-  const result: any = { ...row };
-  for (const [snake, camel] of Object.entries(map)) {
-    if (result[snake] !== undefined) {
-      result[camel] = result[snake];
-      delete result[snake];
-    }
+// Apply a single real-time record change to localStorage (INSERT/UPDATE/DELETE)
+function applyRealtimeChange(table: string, eventType: string, newRecord: any, oldRecord: any): string {
+  const key = (TABLE_KEYS_FOR_REALTIME as any)[table] || `mix_${table}`;
+  const arr = readLocalAny(key);
+  if (eventType === 'INSERT' && newRecord) {
+    if (!arr.find((r: any) => r.id === newRecord.id)) arr.push(newRecord);
+  } else if (eventType === 'UPDATE' && newRecord) {
+    const idx = arr.findIndex((r: any) => r.id === newRecord.id);
+    if (idx >= 0) arr[idx] = newRecord;
+    else arr.push(newRecord);
+  } else if (eventType === 'DELETE' && oldRecord) {
+    const filtered = arr.filter((r: any) => r.id !== oldRecord.id);
+    localStorage.setItem(key, JSON.stringify(filtered));
+    return key;
   }
-  return result;
+  localStorage.setItem(key, JSON.stringify(arr));
+  return key;
+}
+
+const TABLE_KEYS_FOR_REALTIME: Record<string, string> = {
+  stores: 'mix_stores',
+  products: 'mix_products',
+  orders: 'mix_orders',
+  banners: 'mix_banners',
+  reviews: 'mix_reviews',
+  coupons: 'mix_coupons',
+  app_users: 'mix_users',
+  store_requests: 'mix_store_requests',
+};
+
+function readLocalAny(key: string): any[] {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
 }
 
 // Map icon strings to Lucide components
@@ -423,22 +434,12 @@ export default function App() {
     };
     const unsubscribers: (() => void)[] = [];
     Object.entries(tableToKey).forEach(([table, key]) => {
-      const unsub = realtimeSync.subscribe(table, async (payload) => {
+      const unsub = realtimeSync.subscribe(table, (payload) => {
         if (!isMounted) return;
-        // This fires on RECEIVING clients whose localStorage hasn't been updated yet.
-        // Reload the full table from Supabase into localStorage, then dispatch the event.
-        try {
-          const { data, error } = await supabase.from(table).select('*');
-          if (!error && data) {
-            localStorage.setItem(key, JSON.stringify(
-              data.map((row: any) => mapRowInline(table, row))
-            ));
-            handleRealtimeEvent(new CustomEvent('local-storage-change', { detail: { key } }));
-          }
-        } catch (err) {
-          // Fallback: just dispatch the event with existing localStorage
-          handleRealtimeEvent(new CustomEvent('local-storage-change', { detail: { key } }));
-        }
+        // Apply the single change to localStorage, then dispatch event
+        // This avoids race conditions from full-reloading stale data
+        applyRealtimeChange(table, payload.eventType, payload.newRecord, payload.oldRecord);
+        handleRealtimeEvent(new CustomEvent('local-storage-change', { detail: { key } }));
       });
       unsubscribers.push(unsub);
     });
